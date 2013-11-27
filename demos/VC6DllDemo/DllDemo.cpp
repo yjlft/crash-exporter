@@ -7,12 +7,7 @@
 
 #include "CrashRpt for vc6.0.h"
 
-HMODULE g_hModule;
-
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
-					 )
+void InitCrashRpt()
 {
 	CR_INSTALL_INFO info;
 	// memset(&info, 0, sizeof(CR_INSTALL_INFO));
@@ -28,26 +23,38 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	
 	nInstResult = crAddScreenshot(CR_AS_MAIN_WINDOW);
 	assert(nInstResult==0);
-
+	
     // Check result
     if(nInstResult!=0)
     {
         TCHAR buff[256];
         crGetLastErrorMsg(buff, 256); // Get last error
         _tprintf(_T("%s\n"), buff); // and output it to the screen
-        return FALSE;
-    }
+        return;
+    }	
+}
 
+
+void UnInitCrashRpt()
+{
+	int nUninstRes = crUninstall(); // Uninstall exception handlers
+	assert(nUninstRes==0);
+}
+
+BOOL APIENTRY DllMain( HANDLE /*hModule*/, 
+                       DWORD  ul_reason_for_call, 
+                       LPVOID /*lpReserved*/
+					 )
+{
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		g_hModule = (HMODULE)hModule; 
+		InitCrashRpt();
+		break;
+	case DLL_PROCESS_DETACH:
+		UnInitCrashRpt();
 		break;
 	}
-
-// 	int nUninstRes = crUninstall(); // Uninstall exception handlers
-//     assert(nUninstRes==0);
-//     nUninstRes;
 	return TRUE;
 }
 
