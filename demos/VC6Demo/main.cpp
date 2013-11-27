@@ -4,23 +4,8 @@
 #include <tchar.h>
 #include <stdio.h>
 #include <conio.h>
-#include <stdlib.h>
-#include <new.h>
-#include <signal.h>
-#include <exception>
-#include <sys/stat.h>
-#include <psapi.h>
-#include <rtcapi.h>
-#include <Shellapi.h>
-#include <dbghelp.h>
 #include <assert.h>
-
-#include "..\..\include\CrashRpt for vc6.0.h"
-
-#include <float.h>
-
-#define BIG_NUMBER 0x1fffffff
-#pragma warning(disable: 4717) // avoid C4717 warning
+#include "CrashRpt for vc6.0.h"
 
 void main()
 {
@@ -50,7 +35,6 @@ void main()
 
 	printf("Choose an exception type:\n");
 	printf("0 - SEH exception\n");
-	printf("4 - invalid parameter\n");
 	printf("12 - RaiseException\n");
 	printf("13 - throw C++ typed exception\n");
 	printf("Your choice >  ");
@@ -65,15 +49,6 @@ void main()
 			// Access violation
 			int *p = 0;
 			*p = 0;
-		}
-		break;
-	case 4: // invalid parameter
-		{      
-			char* formatString;
-			// Call printf_s with invalid parameters.
-			formatString = NULL;
-			printf(formatString);
-
 		}
 		break;
 	case 12: // RaiseException 
