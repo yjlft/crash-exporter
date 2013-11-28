@@ -183,7 +183,7 @@ void CCrashHandler::CreateMiniDump(EXCEPTION_POINTERS* pExcPtrs)
 	{
 		time_t now;
 		time(&now);
-		strftime(szFilename, sizeof(szFilename), "Crash_%Y-%m-%d.dmp", localtime(&now));
+		strftime(szFilename, sizeof(szFilename), "CrashDump_%Y-%m-%d_%H-%M-%S.dmp", localtime(&now));
 	}
 
 	// Create the minidump file

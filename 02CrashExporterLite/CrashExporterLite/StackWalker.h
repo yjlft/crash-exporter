@@ -205,7 +205,7 @@ private:
 			char filename[64];
 
 			time(&now);
-			strftime(filename, sizeof(filename), "StackWalker_%Y-%m-%d.txt", localtime(&now));
+			strftime(filename, sizeof(filename), "StackWalker_%Y-%m-%d_%H-%M-%S.txt", localtime(&now));
 			m_pLogHandle = new LogFile(filename);
 		}
 		else
