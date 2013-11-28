@@ -2,7 +2,7 @@
 
 #include "..\include\CrashExporterMini.h"
 
-CCrashExporterMini g_CrashExporterMini("test");
+CCrashExporterMini g_CrashExporterMini;
 DWORD WINAPI ThreadProc( LPVOID lpParam )
 {
 	char* pcTemp = NULL;

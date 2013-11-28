@@ -252,7 +252,7 @@ private://ÆÁ±Îº¯Êý
 class CCrashExporterMini
 {	
 public:	
-	CCrashExporterMini(LPCTSTR szAppName = _T("CrashExporterMini"));	
+	CCrashExporterMini(LPCTSTR szCrashExporterName = NULL);	
 	~CCrashExporterMini()
 	{
 		UnInitStackEnviroment();
@@ -260,7 +260,7 @@ public:
 		m_plogFile = NULL;
 	}
 private:	
-	static LPCTSTR m_szAppName;
+	static LPCTSTR m_szCrashExporterName;
 	static LogFile* m_plogFile;
 
 	static long WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS *pExceptionInfo );	
@@ -269,14 +269,23 @@ private:
 	void InitLogFileEnviroment();
 };
 
-LPCTSTR	CCrashExporterMini::m_szAppName = NULL;
+LPCTSTR	CCrashExporterMini::m_szCrashExporterName = NULL;
 LogFile* CCrashExporterMini::m_plogFile = NULL;
 
-CCrashExporterMini::CCrashExporterMini(LPCTSTR szAppName)
+CCrashExporterMini::CCrashExporterMini(LPCTSTR szCrashExporterName /*= NULL*/)
 {	
 	// if this assert fires then you have two instances of MiniDumper which is not allowed
-    assert( m_szAppName == NULL );            //assert only one DumperAndStackwalk
-	m_szAppName =_tcsdup(szAppName);
+    assert( m_szCrashExporterName == szCrashExporterName );            //assert only one CrashExporterMini
+
+	if (szCrashExporterName == NULL)
+	{
+		char szFilename[1024] = {0};
+		time_t now;
+		time(&now);
+		strftime(szFilename, sizeof(szFilename), "CrashExporter%Y-%m-%d_%H-%M-%S", localtime(&now));
+		szCrashExporterName = szFilename;
+	}
+	m_szCrashExporterName =_tcsdup(szCrashExporterName);
 
 	::SetUnhandledExceptionFilter(UnhandledExceptionFilter);
 	
@@ -286,9 +295,9 @@ CCrashExporterMini::CCrashExporterMini(LPCTSTR szAppName)
 void CCrashExporterMini::InitLogFileEnviroment()
 {
 	assert(m_plogFile == NULL);
-	assert( m_szAppName != NULL );
+	assert( m_szCrashExporterName != NULL );
 	char szLogFileName[MAXNAMELEN] = {0}; 
-	sprintf(szLogFileName, "%s%s", m_szAppName,".txt");
+	sprintf(szLogFileName, "%s%s", m_szCrashExporterName,".txt");
 	m_plogFile = new LogFile(szLogFileName);
 
 	time_t now;
@@ -320,7 +329,7 @@ void CCrashExporterMini::InitDumpEnviroment(HMODULE& hDll, TCHAR* szDumpPath)
 	// work out a good place for the dump file
 	_tgetcwd(szDumpPath,_MAX_PATH);
 	_tcscat( szDumpPath, _T("//"));
-	_tcscat( szDumpPath, m_szAppName );
+	_tcscat( szDumpPath, m_szCrashExporterName );
     _tcscat( szDumpPath, _T(".dmp"));
 }
 
