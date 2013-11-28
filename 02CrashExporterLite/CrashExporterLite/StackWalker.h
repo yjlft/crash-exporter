@@ -192,7 +192,7 @@ private:
 		char headText[128];
 		time(&now);
 
-		strftime(headText, sizeof(headText), "-----------------%Y-%m-%d %H:%M:%S----------------\n", 
+		strftime(headText, sizeof(headText), "-----------------%Y-%m-%d %H:%M:%S----------------\r\n", 
 			localtime(&now));
 		if (m_pLogHandle)
 			m_pLogHandle->Log(headText);
