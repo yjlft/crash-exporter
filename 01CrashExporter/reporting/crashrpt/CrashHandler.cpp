@@ -156,15 +156,6 @@ int CCrashHandler::Init(
 
     }
 
-    // Check that we store ZIP archives only when error reports are not being sent.
-    BOOL bSendErrorReport = (dwFlags&CR_INST_DONT_SEND_REPORT)?FALSE:TRUE;
-    BOOL bStoreZIPArchives = (dwFlags&CR_INST_STORE_ZIP_ARCHIVES)?TRUE:FALSE;
-    if(bSendErrorReport && bStoreZIPArchives)
-    {
-        crSetErrorMsg(_T("The flag CR_INST_STORE_ZIP_ARCHIVES should be used with CR_INST_DONT_SEND_REPORT flag."));
-        return 1;
-    }
-
     // Save restart command line
     m_sRestartCmdLine = lpcszRestartCmdLine;
     // Get the name of CrashRpt DLL

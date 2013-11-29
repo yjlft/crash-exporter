@@ -341,7 +341,6 @@ CCrashInfoReader::CCrashInfoReader()
 	// Init internal variables.
 	m_nCrashRptVersion = 0;
 	m_bGUIMode = FALSE;
-	m_bSendMandatory = FALSE;
 	m_bAllowAttachMoreFiles = FALSE;
 	m_bStoreZIPArchives = FALSE;
 	m_bAppRestart = FALSE;
@@ -500,9 +499,7 @@ int CCrashInfoReader::UnpackCrashDescription(CErrorReportInfo& eri)
 	// Unpack install flags
 	DWORD dwInstallFlags = m_pCrashDesc->m_dwInstallFlags;       
 	m_bGUIMode = (dwInstallFlags&CR_INST_SHOW_GUI)!=0;    
-	m_bSendMandatory = (dwInstallFlags&CR_INST_SEND_MANDATORY)!=0;
 	m_bAllowAttachMoreFiles = (dwInstallFlags&CR_INST_ALLOW_ATTACH_MORE_FILES)!=0;
-	m_bStoreZIPArchives = (dwInstallFlags&CR_INST_STORE_ZIP_ARCHIVES)!=0;
 	m_bAppRestart = (dwInstallFlags&CR_INST_APP_RESTART)!=0;
 	m_bGenerateMinidump = (dwInstallFlags&CR_INST_NO_MINIDUMP)==0;
 	m_MinidumpType = m_pCrashDesc->m_MinidumpType;    

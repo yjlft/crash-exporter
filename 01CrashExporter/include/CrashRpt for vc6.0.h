@@ -479,14 +479,9 @@ crSetCrashCallbackA(
 #define CR_INST_CRT_EXCEPTION_HANDLERS         0x1FFE //!< Install exception handlers for the linked CRT module.
 
 #define CR_INST_SHOW_GUI                       0x2000 //!< Do not show GUI, send report silently (use for non-GUI apps only).
-#define CR_INST_HTTP_BINARY_ENCODING           0x4000 //!< Deprecated, do not use.
-#define CR_INST_DONT_SEND_REPORT               0x8000 //!< Don't send error report immediately, just save it locally.
 #define CR_INST_APP_RESTART                   0x10000 //!< Restart the application on crash.
 #define CR_INST_NO_MINIDUMP                   0x20000 //!< Do not include minidump file to crash report.
 #define CR_INST_SEND_QUEUED_REPORTS           0x40000 //!< CrashRpt should send error reports that are waiting to be delivered.
-#define CR_INST_STORE_ZIP_ARCHIVES            0x80000 //!< CrashRpt should store both uncompressed error report files and ZIP archives.
-#define CR_INST_SEND_MANDATORY				 0x100000 //!< This flag removes the "Close" and "Other actions" buttons from Error Report dialog, thus making the sending procedure mandatory for user.
-#define CR_INST_SHOW_ADDITIONAL_INFO_FIELDS	 0x200000 //!< Makes "Your E-mail" and "Describe what you were doing when the problem occurred" fields of Error Report dialog always visible.
 #define CR_INST_ALLOW_ATTACH_MORE_FILES		 0x400000 //!< Adds an ability for user to attach more files to crash report by clicking "Attach More File(s)" item from context menu of Error Report Details dialog.
 #define CR_INST_AUTO_THREAD_HANDLERS         0x800000 //!< If this flag is set, installs exception handlers for newly created threads automatically.
 

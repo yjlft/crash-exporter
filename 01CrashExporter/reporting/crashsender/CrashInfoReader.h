@@ -228,7 +228,6 @@ public:
 	CString     m_sAppName;             // Application name.
 	CString     m_sCustomSenderIcon;    // Custom icon resource for Error Report dialog.    
 	BOOL        m_bGUIMode;          // Should we show GUI?
-	BOOL		m_bSendMandatory;       // Disable "Close" and "Other actions.." buttons on Error Report dialog.
 	BOOL		m_bAllowAttachMoreFiles; // Whether to allow user to attach more files to crash report by clicking "Attach More File(s)" item from context menu of Error Report Details dialog.
 	BOOL        m_bStoreZIPArchives;    // Should we store zipped error report files?
 	BOOL        m_bAppRestart;          // Should we restart the crashed application?
