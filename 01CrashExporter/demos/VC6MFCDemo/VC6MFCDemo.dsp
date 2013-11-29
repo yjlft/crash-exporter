@@ -53,7 +53,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\Release\VC6MFCDemo.pdb" /debug /machine:I386 /out:"..\..\bin\VC6MFCDemo.exe" /libpath:"..\..\lib"
+# ADD LINK32 CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\VC6MFCDemo.pdb" /debug /machine:I386 /out:"..\..\bin\VC6MFCDemo.exe" /libpath:"..\..\lib"
+# SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "VC6MFCDemo - Win32 Debug"
 
@@ -68,8 +69,8 @@ LINK32=link.exe
 # PROP Intermediate_Dir "Debug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ  /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /FD /GZ   /c
+# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "_DEBUG" /d "_AFXDLL"
@@ -80,6 +81,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 CrashRpt1402d.lib /nologo /subsystem:windows /pdb:"..\..\bin\VC6MFCDemoD.pdb" /debug /machine:I386 /out:"..\..\bin\VC6MFCDemoD.exe" /pdbtype:sept /libpath:"..\..\lib"
+# SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
 
