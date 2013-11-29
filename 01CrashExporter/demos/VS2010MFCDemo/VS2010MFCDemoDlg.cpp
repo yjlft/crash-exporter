@@ -88,10 +88,23 @@ HCURSOR CVS2010MFCDemoDlg::OnQueryDragIcon()
 }
 
 
+DWORD WINAPI ThreadProc( LPVOID /*lpParam*/ )
+{
+	int *p = 0;
+	*p = 0; // Access violation
+	return 0;
+}
 
 void CVS2010MFCDemoDlg::OnBnClickedbtncrash()
 {
-	// TODO: 在此添加控件通知处理程序代码
-	int* p = NULL;
-	*p = 13;
+
+#if 0
+	int *p = 0;
+	*p = 0; // Access violation
+#else
+	DWORD idThread;
+	HANDLE hThread;
+	hThread = ::CreateThread( NULL, 0, ThreadProc, NULL, 0, &idThread );
+	::WaitForSingleObject(hThread, INFINITE);
+#endif
 }
