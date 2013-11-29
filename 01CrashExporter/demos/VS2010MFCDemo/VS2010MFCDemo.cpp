@@ -5,6 +5,8 @@
 #include "stdafx.h"
 #include "VS2010MFCDemo.h"
 #include "VS2010MFCDemoDlg.h"
+#include "CrashRpt.h"
+#include "assert.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -34,11 +36,46 @@ CVS2010MFCDemoApp theApp;
 
 // CVS2010MFCDemoApp 初始化
 
+int CVS2010MFCDemoApp::Run() 
+{
+	// Call your crInstall code here ...
+
+	CR_INSTALL_INFO info;
+	// Install crash handlers
+	int nInstResult = crInstall(&info);            
+	assert(nInstResult==0);
+
+	nInstResult = crAddScreenshot(CR_AS_MAIN_WINDOW);
+	assert(nInstResult==0);
+
+	// Check result
+	if(nInstResult!=0)
+	{
+		TCHAR buff[256];
+		crGetLastErrorMsg(buff, 256); // Get last error
+		_tprintf(_T("%s\n"), buff); // and output it to the screen
+		return FALSE;
+	}
+
+	BOOL bRun;
+	BOOL bExit=FALSE;
+	while(!bExit)
+	{
+		bRun= CWinApp::Run();
+		bExit=TRUE;
+	}
+
+	// Uninstall crash reporting
+	//crUninstall();
+	return bRun;
+}
+
+
 BOOL CVS2010MFCDemoApp::InitInstance()
 {
 
 	CWinApp::InitInstance();
-
+	Run();
 
 	// 创建 shell 管理器，以防对话框包含
 	// 任何 shell 树视图控件或 shell 列表视图控件。

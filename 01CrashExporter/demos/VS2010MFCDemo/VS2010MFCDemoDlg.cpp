@@ -6,8 +6,6 @@
 #include "VS2010MFCDemo.h"
 #include "VS2010MFCDemoDlg.h"
 #include "afxdialogex.h"
-#include "CrashRpt.h"
-#include "assert.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -49,24 +47,6 @@ BOOL CVS2010MFCDemoDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-
-	CR_INSTALL_INFO info;
-	// Install crash handlers
-	int nInstResult = crInstall(&info);            
-	assert(nInstResult==0);
-
-	nInstResult = crAddScreenshot(CR_AS_MAIN_WINDOW);
-	assert(nInstResult==0);
-
-	// Check result
-	if(nInstResult!=0)
-	{
-		TCHAR buff[256];
-		crGetLastErrorMsg(buff, 256); // Get last error
-		_tprintf(_T("%s\n"), buff); // and output it to the screen
-		return FALSE;
-	}
-
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -112,6 +92,6 @@ HCURSOR CVS2010MFCDemoDlg::OnQueryDragIcon()
 void CVS2010MFCDemoDlg::OnBnClickedbtncrash()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int *p;
-	*p = 100;
+	int* p = NULL;
+	*p = 13;
 }
