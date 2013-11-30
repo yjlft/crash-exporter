@@ -41,7 +41,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int /*nCmdShow*/ = SW_SHOWDEFAULT)
 	if(_tcscmp(argv[1], _T("/terminate"))==0)
 	{
 		// User wants us to find and terminate all instances of CrashExporter.exe
-		return CErrorReportExporter::TerminateAllCrashExporterProcesses();
+		return CErrorReportExporter::TerminateAllcrashExporterProcesses();
 	}
 
 	// Extract file mapping name from command line arg.    

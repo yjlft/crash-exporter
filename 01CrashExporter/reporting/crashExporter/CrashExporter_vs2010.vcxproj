@@ -383,6 +383,7 @@
     <ClCompile Include="..\crashrpt\SharedMem.cpp" />
     <ClCompile Include="..\crashrpt\Utility.cpp" />
     <ClCompile Include="AssyncNotification.cpp" />
+    <ClCompile Include="CrashExporter.cpp" />
     <ClCompile Include="CrashInfoReader.cpp" />
     <ClCompile Include="ErrorReportExporter.cpp" />
     <ClCompile Include="ScreenCap.cpp" />
@@ -405,6 +406,12 @@
     <ClInclude Include="ScreenCap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="ExportDlg.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CrashExporter.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\CrashExporter.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
