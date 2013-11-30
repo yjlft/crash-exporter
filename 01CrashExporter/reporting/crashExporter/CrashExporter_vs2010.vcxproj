@@ -36,7 +36,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{939312D6-690A-4103-92C5-4D89025BF10A}</ProjectGuid>
-    <RootNamespace>CrashSender</RootNamespace>
+    <RootNamespace>CrashExporter</RootNamespace>
     <ProjectName>CrashExporter</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -136,13 +136,13 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Template|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Template|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Template|x64'" />
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CrashSender$(CrashRptVer)d</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CrashSender$(CrashRptVer)</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CrashSender$(CrashRptVer)</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release LIB|Win32'">CrashSender$(CrashRptVer)</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CrashSender$(CrashRptVer)d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CrashExporter$(CrashRptVer)d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CrashExporter$(CrashRptVer)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CrashExporter$(CrashRptVer)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release LIB|Win32'">CrashExporter$(CrashRptVer)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CrashExporter$(CrashRptVer)d</TargetName>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\bin\$(Platform)\</OutDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release LIB|x64'">CrashSender$(CrashRptVer)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release LIB|x64'">CrashExporter$(CrashRptVer)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -150,12 +150,12 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)CrashSender.tlb</TypeLibraryName>
-      <HeaderFileName>CrashSender.h</HeaderFileName>
+      <TypeLibraryName>$(IntDir)CrashExporter.tlb</TypeLibraryName>
+      <HeaderFileName>CrashExporter.h</HeaderFileName>
       <DllDataFileName>
       </DllDataFileName>
-      <InterfaceIdentifierFileName>CrashSender_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>CrashSender_p.c</ProxyFileName>
+      <InterfaceIdentifierFileName>CrashExporter_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CrashExporter_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -178,7 +178,7 @@
       <AdditionalDependencies>tinyxmld.lib;jpegd.lib;zlibd.lib;minizipd.lib;WS2_32.lib;Dnsapi.lib;wininet.lib;Rpcrt4.lib;Gdi32.lib;shell32.lib;Comdlg32.lib;version.lib;libpngd.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)thirdparty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)\CrashSenderd.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)\CrashExporterd.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -193,12 +193,12 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)CrashSender.tlb</TypeLibraryName>
-      <HeaderFileName>CrashSender.h</HeaderFileName>
+      <TypeLibraryName>$(IntDir)CrashExporter.tlb</TypeLibraryName>
+      <HeaderFileName>CrashExporter.h</HeaderFileName>
       <DllDataFileName>
       </DllDataFileName>
-      <InterfaceIdentifierFileName>CrashSender_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>CrashSender_p.c</ProxyFileName>
+      <InterfaceIdentifierFileName>CrashExporter_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CrashExporter_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\libogg\include;$(SolutionDir)thirdparty\libtheora\include;$(SolutionDir)reporting\crashrpt;$(SolutionDir)thirdparty\tinyxml;$(SolutionDir)thirdparty\zlib;$(SolutionDir)thirdparty\minizip;$(SolutionDir)include;$(SolutionDir)thirdparty\libpng;$(SolutionDir)thirdparty\wtl;$(SolutionDir)thirdparty\dbghelp\include;$(SolutionDir)thirdparty\jpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -222,7 +222,7 @@
       <AdditionalDependencies>jpeg.lib;tinyxml.lib;zlib.lib;libpng.lib;minizip.lib;WS2_32.lib;Dnsapi.lib;wininet.lib;Rpcrt4.lib;psapi.lib;Gdi32.lib;shell32.lib;Comdlg32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)thirdparty\lib%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)\CrashSender.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)\CrashExporter.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -238,12 +238,12 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>X64</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)CrashSender.tlb</TypeLibraryName>
-      <HeaderFileName>CrashSender.h</HeaderFileName>
+      <TypeLibraryName>$(IntDir)CrashExporter.tlb</TypeLibraryName>
+      <HeaderFileName>CrashExporter.h</HeaderFileName>
       <DllDataFileName>
       </DllDataFileName>
-      <InterfaceIdentifierFileName>CrashSender_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>CrashSender_p.c</ProxyFileName>
+      <InterfaceIdentifierFileName>CrashExporter_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CrashExporter_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\libogg\include;$(SolutionDir)thirdparty\libtheora\include;$(SolutionDir)reporting\crashrpt;$(SolutionDir)thirdparty\tinyxml;$(SolutionDir)thirdparty\zlib;$(SolutionDir)thirdparty\minizip;$(SolutionDir)include;$(SolutionDir)thirdparty\libpng;$(SolutionDir)thirdparty\wtl;$(SolutionDir)thirdparty\dbghelp\include;$(SolutionDir)thirdparty\jpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -281,12 +281,12 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)CrashSender.tlb</TypeLibraryName>
-      <HeaderFileName>CrashSender.h</HeaderFileName>
+      <TypeLibraryName>$(IntDir)CrashExporter.tlb</TypeLibraryName>
+      <HeaderFileName>CrashExporter.h</HeaderFileName>
       <DllDataFileName>
       </DllDataFileName>
-      <InterfaceIdentifierFileName>CrashSender_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>CrashSender_p.c</ProxyFileName>
+      <InterfaceIdentifierFileName>CrashExporter_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CrashExporter_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\libtheora\include;$(SolutionDir)thirdparty\libogg\include;$(SolutionDir)reporting\crashrpt;$(SolutionDir)thirdparty\tinyxml;$(SolutionDir)thirdparty\zlib;$(SolutionDir)thirdparty\minizip;$(SolutionDir)include;$(SolutionDir)thirdparty\libpng;$(SolutionDir)thirdparty\wtl;$(SolutionDir)thirdparty\dbghelp\include;$(SolutionDir)thirdparty\jpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -310,7 +310,7 @@
       <AdditionalDependencies>libogg.lib;libtheora.lib;tinyxml.lib;jpeg.lib;zlib.lib;minizip.lib;libpng.lib;psapi.lib;WS2_32.lib;Dnsapi.lib;wininet.lib;Rpcrt4.lib;Gdi32.lib;shell32.lib;Comdlg32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\thirdparty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>..\..\bin\CrashSender.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>..\..\bin\CrashExporter.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -324,12 +324,12 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>X64</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)CrashSender.tlb</TypeLibraryName>
-      <HeaderFileName>CrashSender.h</HeaderFileName>
+      <TypeLibraryName>$(IntDir)CrashExporter.tlb</TypeLibraryName>
+      <HeaderFileName>CrashExporter.h</HeaderFileName>
       <DllDataFileName>
       </DllDataFileName>
-      <InterfaceIdentifierFileName>CrashSender_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>CrashSender_p.c</ProxyFileName>
+      <InterfaceIdentifierFileName>CrashExporter_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CrashExporter_p.c</ProxyFileName>
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\libtheora\include;$(SolutionDir)thirdparty\libogg\include;$(SolutionDir)reporting\crashrpt;$(SolutionDir)thirdparty\tinyxml;$(SolutionDir)thirdparty\zlib;$(SolutionDir)thirdparty\minizip;$(SolutionDir)include;$(SolutionDir)thirdparty\libpng;$(SolutionDir)thirdparty\wtl;$(SolutionDir)thirdparty\dbghelp\include;$(SolutionDir)thirdparty\jpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -411,7 +411,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties RESOURCE_FILE="CrashSender.rc" />
+      <UserProperties RESOURCE_FILE="CrashExporter.rc" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

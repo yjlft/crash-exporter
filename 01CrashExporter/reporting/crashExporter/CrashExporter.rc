@@ -96,7 +96,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\CrashSender.ico"
+IDR_MAINFRAME           ICON                    "res\\CrashExporter.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -146,9 +146,9 @@ BEGIN
         BEGIN
             VALUE "FileDescription", "Crash Report Delivery Module"
             VALUE "FileVersion", "1.4.0.2"
-            VALUE "InternalName", "CrashSender"
+            VALUE "InternalName", "CrashExporter"
             VALUE "LegalCopyright", "Copyright 2003-2013 The CrashRpt Project Authors"
-            VALUE "OriginalFilename", "CrashSender.exe"
+            VALUE "OriginalFilename", "CrashExporter.exe"
             VALUE "ProductName", "CrashRpt"
             VALUE "ProductVersion", "1.4.0.2"
         END

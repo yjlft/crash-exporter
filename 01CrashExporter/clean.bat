@@ -60,13 +60,13 @@ rmdir /S /Q reporting\crashrpt\x64
 erase /A H reporting\crashrpt\*.user
 erase reporting\crashrpt\*.aps
 
-rmdir /S /Q reporting\CrashSender\Debug
-rmdir /S /Q reporting\CrashSender\Release
-rmdir /S /Q "reporting\CrashSender\Release LIB"
-rmdir /S /Q reporting\CrashSender\x64
-erase /A H reporting\CrashSender\*.user
-erase reporting\CrashSender\*.aps
-erase reporting\CrashSender\*.aps
+rmdir /S /Q reporting\CrashExporter\Debug
+rmdir /S /Q reporting\CrashExporter\Release
+rmdir /S /Q "reporting\CrashExporter\Release LIB"
+rmdir /S /Q reporting\CrashExporter\x64
+erase /A H reporting\CrashExporter\*.user
+erase reporting\CrashExporter\*.aps
+erase reporting\CrashExporter\*.aps
 
 rmdir /S /Q thirdparty\zlib\Debug
 rmdir /S /Q thirdparty\zlib\Release

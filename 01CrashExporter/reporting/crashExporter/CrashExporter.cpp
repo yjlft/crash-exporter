@@ -8,7 +8,7 @@ tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
 ***************************************************************************************/
 
-// File: CrashSender.cpp
+// File: CrashExporter.cpp
 // Description: Entry point to the application. 
 // Authors: zexspectrum
 // Date: 2010
@@ -40,8 +40,8 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int /*nCmdShow*/ = SW_SHOWDEFAULT)
 
 	if(_tcscmp(argv[1], _T("/terminate"))==0)
 	{
-		// User wants us to find and terminate all instances of CrashSender.exe
-		return CErrorReportExporter::TerminateAllCrashSenderProcesses();
+		// User wants us to find and terminate all instances of CrashExporter.exe
+		return CErrorReportExporter::TerminateAllCrashExporterProcesses();
 	}
 
 	// Extract file mapping name from command line arg.    
@@ -69,7 +69,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int /*nCmdShow*/ = SW_SHOWDEFAULT)
 	}
 	else
 	{
-		//::MessageBox(NULL, _T("slient mode"), _T("CrashSender"), MB_OK);
+		//::MessageBox(NULL, _T("slient mode"), _T("CrashExporter"), MB_OK);
 		time_t now;
 		char chfilename[64] = {0};
 
