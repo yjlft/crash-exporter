@@ -70,11 +70,11 @@ BOOL CErrorReportExporter::Init(LPCTSTR szFileMappingName)
 	}
 	else
 	{
-		// Check if another instance of CrashSender.exe is running.
+		// Check if another instance of crashExporter.exe is running.
 		::CreateMutex( NULL, FALSE,_T("Local\\43773530-129a-4298-88f2-20eea3e4a59b"));
 		if (::GetLastError() == ERROR_ALREADY_EXISTS)
 		{		
-			m_sErrorMsg = _T("Another CrashSender.exe already tries to resend recent reports.");
+			m_sErrorMsg = _T("Another crashExporter.exe already tries to resend recent reports.");
 			return FALSE;
 		}
 
@@ -1506,9 +1506,9 @@ CString CErrorReportExporter::GetLogFilePath()
 	return m_Assync.GetLogFilePath();
 }
 
-int CErrorReportExporter::TerminateAllCrashSenderProcesses()
+int CErrorReportExporter::TerminateAllcrashExporterProcesses()
 {
-	// This method looks for all runing CrashSender.exe processes
+	// This method looks for all runing crashExporter.exe processes
 	// and terminates each one. This may be needed when an application's installer
 	// wants to shutdown all crash sender processes running in background
 	// to replace the locked files.
@@ -1516,9 +1516,9 @@ int CErrorReportExporter::TerminateAllCrashSenderProcesses()
 	// Format process name.
 	CString sProcessName;
 #ifdef _DEBUG
-	sProcessName.Format(_T("CrashSender%dd.exe"), CRASHRPT_VER);
+	sProcessName.Format(_T("crashExporter%dd.exe"), CRASHRPT_VER);
 #else
-	sProcessName.Format(_T("CrashSender%d.exe"), CRASHRPT_VER);
+	sProcessName.Format(_T("crashExporter%d.exe"), CRASHRPT_VER);
 #endif
 
 	PROCESSENTRY32 entry;

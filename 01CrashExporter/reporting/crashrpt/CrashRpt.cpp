@@ -72,7 +72,7 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
 
     LPCTSTR ptszAppName = strconv.w2t((LPWSTR)pInfo->pszAppName);
     LPCTSTR ptszAppVersion = strconv.w2t((LPWSTR)pInfo->pszAppVersion);
-    LPCTSTR ptszCrashSenderPath = strconv.w2t((LPWSTR)pInfo->pszCrashSenderPath);
+    LPCTSTR ptszcrashExporterPath = strconv.w2t((LPWSTR)pInfo->pszcrashExporterPath);
     LPCTSTR ptszDebugHelpDLL_file = strconv.w2t((LPWSTR)pInfo->pszDebugHelpDLL);
     MINIDUMP_TYPE miniDumpType = pInfo->uMiniDumpType;
     LPCTSTR ptszErrorReportSaveDir = strconv.w2t((LPWSTR)pInfo->pszErrorReportSaveDir);
@@ -82,7 +82,7 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
     int nInitResult = pCrashHandler->Init(
         ptszAppName, 
         ptszAppVersion, 
-        ptszCrashSenderPath,
+        ptszcrashExporterPath,
         pInfo->pfnCrashCallback,
         pInfo->dwFlags,
         ptszDebugHelpDLL_file,
@@ -161,7 +161,7 @@ CRASHRPTAPI(int) crInstallA(CR_INSTALL_INFOA* pInfo)
 
     LPCTSTR ptszAppName = strconv.a2t((LPSTR)pInfo->pszAppName);
     LPCTSTR ptszAppVersion = strconv.a2t((LPSTR)pInfo->pszAppVersion);
-    LPCTSTR ptszCrashSenderPath = strconv.a2t((LPSTR)pInfo->pszCrashSenderPath);
+    LPCTSTR ptszcrashExporterPath = strconv.a2t((LPSTR)pInfo->pszcrashExporterPath);
     LPCTSTR ptszDebugHelpDLL_file = strconv.a2t((LPSTR)pInfo->pszDebugHelpDLL);
     MINIDUMP_TYPE miniDumpType = pInfo->uMiniDumpType;
     LPCTSTR ptszErrorReportSaveDir = strconv.a2t((LPSTR)pInfo->pszErrorReportSaveDir);
@@ -171,7 +171,7 @@ CRASHRPTAPI(int) crInstallA(CR_INSTALL_INFOA* pInfo)
     int nInitResult = pCrashHandler->Init(
 		ptszAppName, 
         ptszAppVersion, 
-        ptszCrashSenderPath,
+        ptszcrashExporterPath,
         pInfo->pfnCrashCallback,
         pInfo->dwFlags,
         ptszDebugHelpDLL_file,

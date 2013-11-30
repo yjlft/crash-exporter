@@ -15,7 +15,7 @@ be found in the Authors.txt file in the root of the source tree.
 
 #include "stdafx.h"
 #include "resource.h"
-#include "ErrorReportSender.h"
+#include "ErrorReportExporter.h"
 #include "CrashInfoReader.h"
 #include "strconv.h"
 #include "Utility.h"
@@ -41,7 +41,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int /*nCmdShow*/ = SW_SHOWDEFAULT)
 	if(_tcscmp(argv[1], _T("/terminate"))==0)
 	{
 		// User wants us to find and terminate all instances of CrashSender.exe
-		return CErrorReportSender::TerminateAllCrashSenderProcesses();
+		return CErrorReportExporter::TerminateAllCrashSenderProcesses();
 	}
 
 	// Extract file mapping name from command line arg.    
@@ -49,7 +49,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int /*nCmdShow*/ = SW_SHOWDEFAULT)
 		
 	// Create the sender model that will collect crash report data 
 	// and send error report(s).
-	CErrorReportSender* pSender = CErrorReportSender::GetInstance();
+	CErrorReportExporter* pSender = CErrorReportExporter::GetInstance();
 
 	// Init the sender object
 	BOOL bInit = pSender->Init(sFileMappingName.GetBuffer(0));

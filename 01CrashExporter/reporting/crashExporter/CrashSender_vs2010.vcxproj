@@ -384,8 +384,7 @@
     <ClCompile Include="..\crashrpt\Utility.cpp" />
     <ClCompile Include="AssyncNotification.cpp" />
     <ClCompile Include="CrashInfoReader.cpp" />
-    <ClCompile Include="CrashSender.cpp" />
-    <ClCompile Include="ErrorReportSender.cpp" />
+    <ClCompile Include="ErrorReportExporter.cpp" />
     <ClCompile Include="ScreenCap.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -401,17 +400,11 @@
     <ClInclude Include="..\crashrpt\Utility.h" />
     <ClInclude Include="AssyncNotification.h" />
     <ClInclude Include="CrashInfoReader.h" />
-    <ClInclude Include="ErrorReportSender.h" />
+    <ClInclude Include="ErrorReportExporter.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenCap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="ExportDlg.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\CrashSender.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="CrashSender.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

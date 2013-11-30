@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by CrashSender.rc
+// Used by crashExporter.rc
 //
 #define IDM_ABOUTBOX                    0x0010
 #define IDR_MAINFRAME                   128

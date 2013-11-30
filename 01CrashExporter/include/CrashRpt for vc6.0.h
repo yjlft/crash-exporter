@@ -183,8 +183,8 @@ typedef BOOL (CALLBACK *LPGETLOGFILE) (__reserved LPVOID lpvState);
 *
 *  \b hSenderProcess [out]
 *
-*     As of v.1.2.8, \a hSenderProcess parameter will contain the handle to the <b>CrashSender.exe</b> process when 
-*     \ref crGenerateErrorReport function returns. The caller may use this handle to wait until <b>CrashSender.exe</b> 
+*     As of v.1.2.8, \a hSenderProcess parameter will contain the handle to the <b>crashExporter.exe</b> process when 
+*     \ref crGenerateErrorReport function returns. The caller may use this handle to wait until <b>crashExporter.exe</b> 
 *     process exits and check the exit code. When the handle is not needed anymore, release it with the \b CloseHandle() function.
 */
 
@@ -200,7 +200,7 @@ typedef struct tagCR_EXCEPTION_INFO
 	const wchar_t* file;       //!< File in which assertion happened.
 	unsigned int line;         //!< Line number.
 	BOOL bManual;              //!< Flag telling if the error report is generated manually or not.
-	HANDLE hSenderProcess;     //!< Handle to the CrashSender.exe process.
+	HANDLE hSenderProcess;     //!< Handle to the crashExporter.exe process.
 }
 CR_EXCEPTION_INFO;
 
@@ -208,7 +208,7 @@ typedef CR_EXCEPTION_INFO* PCR_EXCEPTION_INFO;
 
 // Stages of crash report generation (used by the crash callback function).
 #define CR_CB_STAGE_PREPARE      10  //!< Stage after exception pointers've been retrieved.
-#define CR_CB_STAGE_FINISH       20  //!< Stage after the launch of CrashSender.exe process.
+#define CR_CB_STAGE_FINISH       20  //!< Stage after the launch of crashExporter.exe process.
 
 /*! \ingroup CrashRptStructs
 *  \struct CR_CRASH_CALLBACK_INFOW()
@@ -233,7 +233,7 @@ typedef CR_EXCEPTION_INFO* PCR_EXCEPTION_INFO;
 *    can be called once per each stage (depending on callback function's return value).
 *    Currently, there are two stages:
 *      - \ref CR_CB_STAGE_PREPARE   Stage after exception pointers've been retrieved.
-*      - \ref CR_CB_STAGE_FINISH    Stage after the launch of CrashSender.exe process.
+*      - \ref CR_CB_STAGE_FINISH    Stage after the launch of crashExporter.exe process.
 *
 *  \b pszErrorReportFolder [in]
 *
@@ -327,17 +327,17 @@ typedef CR_CRASH_CALLBACK_INFOA CR_CRASH_CALLBACK_INFO;
 *  and registry keys (see crAddRegKey()) inside of the crash callback function.
 *
 *  By default, CrashRpt terminates the client application after crash report generation and
-*  launching the <i>CrashSender.exe</i> process. However, it is possible to continue program
+*  launching the <i>crashExporter.exe</i> process. However, it is possible to continue program
 *  execution after crash report generation by seting \ref CR_CRASH_CALLBACK_INFO::bContinueExecution
 *  structure field to \a TRUE.
 *
 *  The crash report generation consists of several stages. First, exception pointers are retrieved
 *  and the callback function is called for the first time. The callback function may check the
 *  retrieved exception information and decide wheter to proceed with crash report generation or to
-*  continue client program execution. On the next stage, the \a CrashSender.exe
+*  continue client program execution. On the next stage, the \a crashExporter.exe
 *  process is launched and the crash callback function is (optionally) called for the second time.
-*  Further crash report data collection and delivery work is performed in \a CrashSender.exe process. 
-*  The crash callback may use the provided handle to \a CrashSender.exe process to wait until it exits.
+*  Further crash report data collection and delivery work is performed in \a crashExporter.exe process. 
+*  The crash callback may use the provided handle to \a crashExporter.exe process to wait until it exits.
 *
 *  The crash callback function should typically return \ref CR_CB_DODEFAULT constant to proceed 
 *  with error report generation without being called back on the next stage(s). Returning the
@@ -515,11 +515,11 @@ crSetCrashCallbackA(
 *       the caller process, and this product version is used as application version. If the executable file
 *       doesn's have a version info resource, the \ref crInstall() function will fail.
 *
-*    \b pszCrashSenderPath [in, optional] 
+*    \b pszcrashExporterPath [in, optional] 
 *
-*       This is the absolute path to the directory where CrashSender.exe is located. 
+*       This is the absolute path to the directory where crashExporter.exe is located. 
 *       The crash sender process is responsible for letting end user know about the crash and 
-*       sending the error report. If this is NULL, it is assumed that CrashSender.exe is located in
+*       sending the error report. If this is NULL, it is assumed that crashExporter.exe is located in
 *       the same directory as CrashRpt.dll.
 *
 *
@@ -618,7 +618,7 @@ typedef struct tagCR_INSTALL_INFOW
 	WORD cb;                        //!< Size of this structure in bytes; must be initialized before using!
 	LPCWSTR pszAppName;             //!< Name of application.
 	LPCWSTR pszAppVersion;          //!< Application version.
-	LPCWSTR pszCrashSenderPath;     //!< Directory name where CrashSender.exe is located.
+	LPCWSTR pszcrashExporterPath;     //!< Directory name where crashExporter.exe is located.
 	LPGETLOGFILE pfnCrashCallback;  //!< Deprecated, do not use.
 	DWORD dwFlags;                  //!< Flags.
 	LPCWSTR pszDebugHelpDLL;        //!< File name or folder of Debug help DLL.
@@ -632,7 +632,7 @@ typedef struct tagCR_INSTALL_INFOW
 		cb = 0;
 		pszAppName = NULL;
 		pszAppVersion = NULL;
-		pszCrashSenderPath = NULL;
+		pszcrashExporterPath = NULL;
 		pfnCrashCallback = NULL;
 		dwFlags = 0;
 		pszDebugHelpDLL = NULL;
@@ -656,7 +656,7 @@ typedef struct tagCR_INSTALL_INFOA
 	WORD cb;                       //!< Size of this structure in bytes; must be initialized before using!
 	LPCSTR pszAppName;             //!< Name of application.
 	LPCSTR pszAppVersion;          //!< Application version.
-	LPCSTR pszCrashSenderPath;     //!< Directory name where CrashSender.exe is located.
+	LPCSTR pszcrashExporterPath;     //!< Directory name where crashExporter.exe is located.
 	LPGETLOGFILE pfnCrashCallback; //!< Deprecated, do not use.
 	DWORD dwFlags;                 //!< Flags.
 	LPCSTR pszDebugHelpDLL;        //!< File name or folder of Debug help DLL.
@@ -671,7 +671,7 @@ typedef struct tagCR_INSTALL_INFOA
 		cb = 0;
 		pszAppName = NULL;
 		pszAppVersion = NULL;
-		pszCrashSenderPath = NULL;
+		pszcrashExporterPath = NULL;
 		pfnCrashCallback = NULL;
 		dwFlags = 0;
 		pszDebugHelpDLL = NULL;
@@ -726,8 +726,8 @@ typedef PCR_INSTALL_INFOA PCR_INSTALL_INFO;
 * 
 *    The \a pInfo parameter contains all required information needed to install CrashRpt.
 *
-*    This function fails when \a pInfo->pszCrashSenderPath doesn't contain valid path to CrashSender.exe
-*    or when \a pInfo->pszCrashSenderPath is equal to NULL, but \b CrashSender.exe is not located in the
+*    This function fails when \a pInfo->pszcrashExporterPath doesn't contain valid path to crashExporter.exe
+*    or when \a pInfo->pszcrashExporterPath is equal to NULL, but \b crashExporter.exe is not located in the
 *    directory where \b CrashRpt.dll located.
 *
 *    On crash, the crash minidump file is created, which contains CPU information and 
@@ -735,8 +735,8 @@ typedef PCR_INSTALL_INFOA PCR_INSTALL_INFO;
 *    information that may be helpful for crash analysis. These files along with several additional
 *    files added with crAddFile2() are packed to a single ZIP file.
 *
-*    When crash information is collected, another process, <b>CrashSender.exe</b>, is launched 
-*    and the process where crash had occured is terminated. The CrashSender process is 
+*    When crash information is collected, another process, <b>crashExporter.exe</b>, is launched 
+*    and the process where crash had occured is terminated. The crashExporter process is 
 *    responsible for letting the user know about the crash and send the error report.
 *
 *    If this function fails, use crGetLastErrorMsg() to retrieve the error message.
@@ -892,7 +892,7 @@ crUninstallFromCurrentThread();
 *  
 *    When this function is called, the file is marked to be added to the error report, 
 *    then the function returns control to the caller.
-*    When a crash occurs, all marked files are added to the report by the \b CrashSender.exe process. 
+*    When a crash occurs, all marked files are added to the report by the \b crashExporter.exe process. 
 *    If a file is locked by someone for exclusive access, the file won't be included. 
 *    Inside of \ref PFNCRASHCALLBACK() crash callback, 
 *    close open file handles and ensure files to be included are acessible for reading.
@@ -908,8 +908,8 @@ crUninstallFromCurrentThread();
 *    \a pszDesc is a short description of the file. It can be NULL.
 *
 *    \a dwFlags parameter defines the behavior of the function. This can be a combination of the following flags:
-*       - \ref CR_AF_TAKE_ORIGINAL_FILE  On crash, the \b CrashSender.exe process will try to locate the file from its original location. This behavior is the default one.
-*       - \ref CR_AF_MAKE_FILE_COPY      On crash, the \b CrashSender.exe process will make a copy of the file and save it to the error report folder.  
+*       - \ref CR_AF_TAKE_ORIGINAL_FILE  On crash, the \b crashExporter.exe process will try to locate the file from its original location. This behavior is the default one.
+*       - \ref CR_AF_MAKE_FILE_COPY      On crash, the \b crashExporter.exe process will make a copy of the file and save it to the error report folder.  
 *
 *       - \ref CR_AF_FILE_MUST_EXIST     The function will fail if file doesn't exist at the moment of function call (the default behavior). 
 *       - \ref CR_AF_MISSING_FILE_OK     The function will not fail if file is missing (assume it will be created later).
@@ -1016,7 +1016,7 @@ crAddFile2A(
 *
 *  When this function is called, screenshot flags are saved, 
 *  then the function returns control to the caller.
-*  When crash occurs, screenshot is made by the \b CrashSender.exe process and added to the report. 
+*  When crash occurs, screenshot is made by the \b crashExporter.exe process and added to the report. 
 * 
 *  \b dwFlags 
 *
@@ -1071,7 +1071,7 @@ crAddScreenshot(
 *  at the moment of crash and reproduce the error.
 *
 *  When this function is called, screenshot flags are saved, then the function returns control to the caller.
-*  When crash occurs, screenshot is made by the \b CrashSender.exe process and added to the report. 
+*  When crash occurs, screenshot is made by the \b crashExporter.exe process and added to the report. 
 * 
 *  \b dwFlags 
 *

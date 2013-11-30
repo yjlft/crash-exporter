@@ -88,7 +88,7 @@ public:
     int Init(
         __in_opt LPCTSTR lpcszAppName = NULL,
         __in_opt LPCTSTR lpcszAppVersion = NULL,
-        __in_opt LPCTSTR lpcszCrashSenderPath = NULL,
+        __in_opt LPCTSTR lpcszcrashExporterPath = NULL,
         __in_opt LPGETLOGFILE lpfnCallback = NULL,           
         DWORD dwFlags = 0,
         __in_opt LPCTSTR lpcszDebugHelpDLLPath = NULL,
@@ -194,13 +194,13 @@ public:
     // Packs a custom user property.
     DWORD PackProperty(CString sName, CString sValue);
 		
-    // Launches the CrashSender.exe process.
-    int LaunchCrashSender(
+    // Launches the crashExporter.exe process.
+    int LaunchcrashExporter(
         LPCTSTR szCmdLineParams, 
         BOOL bWait, 
         __out_opt HANDLE* phProcess); 
 
-	// Returns TRUE if CrashSender.exe process is still alive.
+	// Returns TRUE if crashExporter.exe process is still alive.
 	BOOL IsSenderProcessAlive();
 
     // Sets internal pointers to exception handlers to NULL.
@@ -252,7 +252,7 @@ public:
     DWORD m_dwFlags;               // Flags.
     MINIDUMP_TYPE m_MinidumpType;  // Minidump type.
     CString m_sRestartCmdLine;     // App restart command line.
-    CString m_sPathToCrashSender;  // Path to CrashSender.exe
+    CString m_sPathTocrashExporter;  // Path to crashExporter.exe
     CString m_sPathToDebugHelpDll; // Path to dbghelp.dll.
     CString m_sUnsentCrashReportsFolder; // Path to the folder where to save error reports.
     LPGETLOGFILE m_lpfnCallback;   // Client crash callback (deprecated).
@@ -263,13 +263,13 @@ public:
     std::map<CString, FileItem> m_files; // File items to include.
     std::map<CString, CString> m_props;  // User-defined properties to include.
 	CCritSec m_csCrashLock;        // Critical section used to synchronize thread access to this object. 
-	HANDLE m_hEvent;               // Event used to synchronize CrashRpt.dll with CrashSender.exe.
-	HANDLE m_hEvent2;              // Another event used to synchronize CrashRpt.dll with CrashSender.exe.
+	HANDLE m_hEvent;               // Event used to synchronize CrashRpt.dll with crashExporter.exe.
+	HANDLE m_hEvent2;              // Another event used to synchronize CrashRpt.dll with crashExporter.exe.
 	CSharedMem m_SharedMem;        // Shared memory.  
 	CRASH_DESCRIPTION* m_pCrashDesc; // Pointer to crash description shared mem view.
 	CSharedMem* m_pTmpSharedMem;   // Used temporarily
 	CRASH_DESCRIPTION* m_pTmpCrashDesc; // Used temporarily
-	HANDLE m_hSenderProcess;       // Handle to CrashSender.exe process.
+	HANDLE m_hSenderProcess;       // Handle to crashExporter.exe process.
 	PFNCRASHCALLBACKW m_pfnCallback2W; // Client crash callback.
 	PFNCRASHCALLBACKA m_pfnCallback2A; // Client crash callback.
 	LPVOID m_pCallbackParam;       // User-specified argument for callback function.

@@ -30,18 +30,18 @@ enum ActionType
 
 // The main class that collects crash report files, packs them 
 // into a ZIP archive and sends the error report.
-class CErrorReportSender
+class CErrorReportExporter
 {
 public:
 
 	// Constructor.
-	CErrorReportSender();
+	CErrorReportExporter();
 
 	// Destructor.
-	virtual ~CErrorReportSender();
+	virtual ~CErrorReportExporter();
 
 	// Returns singleton of this class.
-	static CErrorReportSender* GetInstance();
+	static CErrorReportExporter* GetInstance();
 
 	// Performs initialization.	
 	BOOL Init(LPCTSTR szFileMappingName);
@@ -82,8 +82,8 @@ public:
 	// Exports crash report to disc as a ZIP archive.
 	void ExportReport(LPCTSTR szOutFileName);
 	
-	// This method finds and terminates all instances of CrashSender.exe process.
-	static int TerminateAllCrashSenderProcesses();
+	// This method finds and terminates all instances of crashExporter.exe process.
+	static int TerminateAllcrashExporterProcesses();
 		
 private:
 
@@ -141,7 +141,7 @@ private:
 	void UnblockParentProcess();
 	
 	// Internal variables
-	static CErrorReportSender* m_pInstance; // Singleton
+	static CErrorReportExporter* m_pInstance; // Singleton
 	CCrashInfoReader m_CrashInfo;       // Contains crash information.
 	CString m_sErrorMsg;                // Last error message.
 	HWND m_hWndNotify;                  // Notification window.

@@ -70,7 +70,7 @@ CCrashHandler::~CCrashHandler()
 int CCrashHandler::Init(
         LPCTSTR lpcszAppName,
         LPCTSTR lpcszAppVersion,
-        LPCTSTR lpcszCrashSenderPath,
+        LPCTSTR lpcszcrashExporterPath,
         LPGETLOGFILE lpfnCallback, 
         DWORD dwFlags,
         LPCTSTR lpcszDebugHelpDLLPath,
@@ -173,36 +173,36 @@ int CCrashHandler::Init(
     pszCrashRptModule = NULL;
 #endif
 
-    // Save path to CrashSender.exe
-    if(lpcszCrashSenderPath==NULL)
+    // Save path to crashExporter.exe
+    if(lpcszcrashExporterPath==NULL)
     {
-        // By default assume that CrashSender.exe is located in the same dir as CrashRpt.dll    
-        m_sPathToCrashSender = Utility::GetModulePath((HMODULE)g_hModuleCrashRpt);    
+        // By default assume that crashExporter.exe is located in the same dir as CrashRpt.dll    
+        m_sPathTocrashExporter = Utility::GetModulePath((HMODULE)g_hModuleCrashRpt);    
     }
     else
     {
         // Save user-specified path    
-        m_sPathToCrashSender = CString(lpcszCrashSenderPath);    
+        m_sPathTocrashExporter = CString(lpcszcrashExporterPath);    
     }
 
-    // Get CrashSender EXE name
-    CString sCrashSenderName;
+    // Get crashExporter EXE name
+    CString scrashExporterName;
 
 #ifdef _DEBUG
-    sCrashSenderName.Format(_T("CrashSender%dd.exe"), CRASHRPT_VER);
+    scrashExporterName.Format(_T("crashExporter%dd.exe"), CRASHRPT_VER);
 #else
-    sCrashSenderName.Format(_T("CrashSender%d.exe"), CRASHRPT_VER);
+    scrashExporterName.Format(_T("crashExporter%d.exe"), CRASHRPT_VER);
 #endif //_DEBUG
 
-    // Check that CrashSender.exe file exists
-    if(m_sPathToCrashSender.Right(1)!='\\')
-        m_sPathToCrashSender+="\\";    
+    // Check that crashExporter.exe file exists
+    if(m_sPathTocrashExporter.Right(1)!='\\')
+        m_sPathTocrashExporter+="\\";    
 
-    HANDLE hFile = CreateFile(m_sPathToCrashSender+sCrashSenderName, FILE_GENERIC_READ, 
+    HANDLE hFile = CreateFile(m_sPathTocrashExporter+scrashExporterName, FILE_GENERIC_READ, 
         FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);  
     if(hFile==INVALID_HANDLE_VALUE)
     { 
-        crSetErrorMsg(_T("CrashSender.exe is not found in the specified path."));
+        crSetErrorMsg(_T("crashExporter.exe is not found in the specified path."));
         return 1;
     }
     else
@@ -210,7 +210,7 @@ int CCrashHandler::Init(
         CloseHandle(hFile);   
     }
 
-    m_sPathToCrashSender += sCrashSenderName;
+    m_sPathTocrashExporter += scrashExporterName;
 
 	// If path to dbghelp.dll not provided, use the default one
     if(lpcszDebugHelpDLLPath==NULL)
@@ -507,7 +507,7 @@ int CCrashHandler::Destroy()
         return 1;
     }  
 
-	// Free handle to CrashSender.exe process.
+	// Free handle to crashExporter.exe process.
 	if(m_hSenderProcess!=NULL)
 		CloseHandle(m_hSenderProcess);
 
@@ -1057,18 +1057,18 @@ int CCrashHandler::GenerateErrorReport(
         return 2;
     }	
 
-    // Start the CrashSender.exe process which will take the dekstop screenshot, 
+    // Start the crashExporter.exe process which will take the dekstop screenshot, 
     // copy user-specified files to the error report folder, create minidump, 
     // notify user about crash, compress the report into ZIP archive and send 
     // the error report. 
 
-    int result = 0; // result of launching CrashSender.exe
+    int result = 0; // result of launching crashExporter.exe
 	
 	// If we are not recording video or video recording process has been terminated by some reason...
 	if(!IsSenderProcessAlive()) 
 	{
-		// Run new CrashSender.exe process
-		result = LaunchCrashSender(m_sCrashGUID, TRUE, &pExceptionInfo->hSenderProcess);
+		// Run new crashExporter.exe process
+		result = LaunchcrashExporter(m_sCrashGUID, TRUE, &pExceptionInfo->hSenderProcess);
 	}
 		
 
@@ -1088,14 +1088,14 @@ int CCrashHandler::GenerateErrorReport(
 	if(result!=0)
     {
         ATLASSERT(result==0);
-        crSetErrorMsg(_T("Error launching CrashSender.exe"));
+        crSetErrorMsg(_T("Error launching crashExporter.exe"));
 
         // Failed to launch crash sender process.
         // Try notifying user about crash using message box.
         CString szCaption;
         szCaption.Format(_T("%s has stopped working"), Utility::getAppName());
         CString szMessage;
-        szMessage.Format(_T("Error launching CrashSender.exe"));
+        szMessage.Format(_T("Error launching crashExporter.exe"));
         MessageBox(NULL, szMessage, szCaption, MB_OK|MB_ICONERROR);    
         return 3;
     }
@@ -1174,12 +1174,12 @@ void CCrashHandler::GetExceptionPointers(DWORD dwExceptionCode,
     pExceptionPointers->ExceptionRecord->ExceptionAddress = _ReturnAddress();    
 }
 
-// Launches CrashSender.exe process
-int CCrashHandler::LaunchCrashSender(LPCTSTR szCmdLineParams, BOOL bWait, HANDLE* phProcess)
+// Launches crashExporter.exe process
+int CCrashHandler::LaunchcrashExporter(LPCTSTR szCmdLineParams, BOOL bWait, HANDLE* phProcess)
 {
     crSetErrorMsg(_T("Unspecified error."));
 
-    /* Create CrashSender.exe process */
+    /* Create crashExporter.exe process */
 
     STARTUPINFO si;
     memset(&si, 0, sizeof(STARTUPINFO));
@@ -1191,13 +1191,13 @@ int CCrashHandler::LaunchCrashSender(LPCTSTR szCmdLineParams, BOOL bWait, HANDLE
 	// Format command line
     TCHAR szCmdLine[_MAX_PATH]=_T("");
 	_tcscat_s(szCmdLine, _MAX_PATH, _T("\""));
-	_tcscat_s(szCmdLine, _MAX_PATH, m_sPathToCrashSender.GetBuffer(0));
+	_tcscat_s(szCmdLine, _MAX_PATH, m_sPathTocrashExporter.GetBuffer(0));
 	_tcscat_s(szCmdLine, _MAX_PATH, _T("\" \""));    
 	_tcscat_s(szCmdLine, _MAX_PATH, szCmdLineParams);
 	_tcscat_s(szCmdLine, _MAX_PATH, _T("\""));    
 
     BOOL bCreateProcess = CreateProcess(
-        m_sPathToCrashSender, szCmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+        m_sPathTocrashExporter, szCmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
     if(pi.hThread)
     {
         CloseHandle(pi.hThread);
@@ -1206,19 +1206,19 @@ int CCrashHandler::LaunchCrashSender(LPCTSTR szCmdLineParams, BOOL bWait, HANDLE
     if(!bCreateProcess)
     {
         ATLASSERT(bCreateProcess);
-        crSetErrorMsg(_T("Error creating CrashSender process."));
+        crSetErrorMsg(_T("Error creating crashExporter process."));
         return 1;
     }
 
     if(bWait)
     {
-        /* Wait until CrashSender finishes with making screenshot, 
+        /* Wait until crashExporter finishes with making screenshot, 
         copying files, creating minidump. */  
 
         WaitForSingleObject(m_hEvent, INFINITE);  
     }
 
-    // Return handle to the CrashSender.exe process.    
+    // Return handle to the crashExporter.exe process.    
     if(phProcess!=NULL)
     {
         *phProcess = pi.hProcess;
@@ -1261,7 +1261,7 @@ int CCrashHandler::PerCrashInit()
 	// (if, for example, user will generate new error report manually).
     Utility::GenerateGUID(m_sCrashGUID);
     
-	// Recreate the event that will be used to synchronize with CrashSender.exe process.
+	// Recreate the event that will be used to synchronize with crashExporter.exe process.
 	if(m_hEvent!=NULL)
 		CloseHandle(m_hEvent); // Free old event
     CString sEventName;
@@ -1290,7 +1290,7 @@ int CCrashHandler::PerCrashInit()
 	}
 
 	// Pack configuration info into shared memory.
-    // It will be passed to CrashSender.exe later.
+    // It will be passed to crashExporter.exe later.
     m_pCrashDesc = PackCrashInfoIntoSharedMem(&m_SharedMem, FALSE);
 	
 	// OK

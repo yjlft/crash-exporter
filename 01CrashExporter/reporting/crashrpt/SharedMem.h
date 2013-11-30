@@ -91,7 +91,7 @@ struct CRASH_DESCRIPTION
 
 #define SHARED_MEM_MAX_SIZE 10*1024*1024   /* 10 MB */
 
-// Used to share memory between CrashRpt.dll and CrashSender.exe
+// Used to share memory between CrashRpt.dll and crashExporter.exe
 class CSharedMem
 {
 public:
