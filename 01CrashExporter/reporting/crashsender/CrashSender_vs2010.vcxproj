@@ -37,7 +37,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{939312D6-690A-4103-92C5-4D89025BF10A}</ProjectGuid>
     <RootNamespace>CrashSender</RootNamespace>
-    <ProjectName>CrashSender</ProjectName>
+    <ProjectName>CrashExporter</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release LIB|Win32'" Label="Configuration">

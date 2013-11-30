@@ -2,7 +2,7 @@
 #include "ExportDlg.h"
 #include "Utility.h"
 #include "CrashInfoReader.h"
-#include "ErrorReportSender.h"
+#include "ErrorReportExporter.h"
 #include "strconv.h"
 
 
@@ -25,7 +25,7 @@ LRESULT CExportDlg::OnExport(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, B
 	// We should export crash report contents as a ZIP archive to
 	// user-specified folder.
 
-	CErrorReportSender* pSender = CErrorReportSender::GetInstance();
+	CErrorReportExporter* pSender = CErrorReportExporter::GetInstance();
 	// Format file name for the output ZIP archive.
 	CString sFileName = _T("");//pCrashInfo->GetReport(m_nCurReport)->GetCrashGUID() + _T(".zip");
 
