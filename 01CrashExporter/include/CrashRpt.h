@@ -466,7 +466,7 @@ crSetCrashCallbackA(
 #define CR_INST_ALL_POSSIBLE_HANDLERS          0x1FFF //!< Install all possible exception handlers.
 #define CR_INST_CRT_EXCEPTION_HANDLERS         0x1FFE //!< Install exception handlers for the linked CRT module.
 
-#define CR_INST_SHOW_GUI                       0x2000 //!< Do not show GUI, send report silently (use for non-GUI apps only).
+#define CR_INST_SHOW_GUI                       0x2000 //!< Show error exporter GUI.
 #define CR_INST_APP_RESTART                    0x4000 //!< Restart the application on crash.
 #define CR_INST_NO_MINIDUMP					   0x8000 //!< Do not include minidump file to crash report.
 #define CR_INST_NO_STACKWALK				  0x10000 //!< Do not include stackwalk file to crash report.
@@ -544,17 +544,6 @@ crSetCrashCallbackA(
 *    <tr><td> \ref CR_INST_NO_MINIDUMP     
 *        <td> <b>Available since v.1.2.4</b> Specify this parameter if you want minidump file not to be included into crash report. The default
 *             behavior is to include the minidump file.
-*
-*    <tr><td> \ref CR_INST_SEND_QUEUED_REPORTS     
-*        <td> <b>Available since v.1.2.5</b> Specify this parameter to send all queued reports. Those
-*             report files are by default stored in <i>%LOCAL_APPDATA%\\CrashRpt\\UnsentCrashReports\\%AppName%_%AppVersion%</i> folder.
-*             If this is specified, CrashRpt checks if it's time to remind user about recent errors in the application and offers to send
-*             all queued error reports.
-
-*    <tr><td> \ref CR_INST_SEND_MANDATORY     
-*        <td> <b>Available since v.1.3.1</b> This parameter makes sending procedure mandatory by removing the "Close" button
-*			  and "Other actions..." button from the Error Report dialog. Typically, it is not recommended to use this flag,
-*             unless you intentionally want users to always send error reports for your application.
 *
 *    <tr><td> \ref CR_INST_ALLOW_ATTACH_MORE_FILES     
 *        <td> <b>Available since v.1.3.1</b> Adds an ability for user to attach more files to crash report by choosing 
@@ -737,13 +726,6 @@ typedef PCR_INSTALL_INFOA PCR_INSTALL_INFO;
 *    When crash information is collected, another process, <b>CrashSender.exe</b>, is launched 
 *    and the process where crash had occured is terminated. The CrashSender process is 
 *    responsible for letting the user know about the crash and send the error report.
-* 
-*    The error report can be sent over E-mail using address and subject passed to the
-*    function as \ref CR_INSTALL_INFO structure members. Another way of sending error report is an HTTP 
-*    request using \a pszUrl member of \ref CR_INSTALL_INFO. 
-*
-*    This function may fail if an appropriate language file (\b crashrpt_lang.ini) is not found 
-*    in the directory where the \b CrashSender.exe file is located.
 *
 *    If this function fails, use crGetLastErrorMsg() to retrieve the error message.
 *
@@ -1172,74 +1154,6 @@ crAddPropertyA(
 #define crAddProperty crAddPropertyA
 #endif //UNICODE
 
-// Flags that can be passed to crAddRegKey() function
-#define CR_AR_ALLOW_DELETE   0x1  //!< If this flag is specified, the file will be deletable from context menu of Error Report Details dialog.
-
-/*! \ingroup CrashRptAPI  
-*  \brief Adds a registry key dump to the crash report.
-* 
-*  \return This function returns zero if succeeded. Use crGetLastErrorMsg() to retrieve the error message on fail.
-*
-*  \param[in] pszRegKey        Registry key to dump, required.
-*  \param[in] pszDstFileName   Name of the destination file, required. 
-*  \param[in] dwFlags          Flags, reserved.
-*  
-*  \remarks 
-*
-*  Use this function to add a dump of a Windows registry key into the crash report. This function
-*  is available since v.1.2.6.
-*
-*  The \a pszRegKey parameter must be the name of the registry key. The key name should begin with "HKEY_CURRENT_USER"
-*  or "HKEY_LOCAL_MACHINE". Other root keys are not supported.
-*
-*  The content of the key specified by the \a pszRegKey parameter will be stored in a human-readable XML
-*  format and included into the error report as \a pszDstFileName destination file. You can dump multiple registry keys
-*  to the same destination file.
-*
-*  The \a dwFlags parameter can be either set to zero (no flags) or with the following constant:
-* 
-*  - \ref CR_AR_ALLOW_DELETE allows the user to delete the file from error report using context menu of Error Report Details dialog.
-*
-*  The following example shows how to dump two registry keys to a single \a regkey.xml file:
-*
-*  \code
-*  
-*  crAddRegKey(_T("HKEY_CURRENT_USER\\Software\\MyApp"), _T("regkey.xml"), 0);
-*  crAddRegKey(_T("HKEY_LOCAL_MACHINE\\Software\\MyApp"), _T("regkey.xml"), 0);
-*
-*  \endcode
-*
-*  \sa
-*   crAddFile2(), crAddScreenshot(), crAddProperty()
-*/
-
-CRASHRPTAPI(int)
-crAddRegKeyW(   
-			 LPCWSTR pszRegKey,
-			 LPCWSTR pszDstFileName,
-			 DWORD dwFlags
-			 );
-
-/*! \ingroup CrashRptAPI
-*  \copydoc crAddRegKeyW()
-*/
-
-CRASHRPTAPI(int)
-crAddRegKeyA(   
-			 LPCSTR pszRegKey,
-			 LPCSTR pszDstFileName,
-			 DWORD dwFlags
-			 );
-
-/*! \brief Character set-independent mapping of crAddRegKeyW() and crAddRegKeyA() functions. 
-*  \ingroup CrashRptAPI
-*/
-#ifdef UNICODE
-#define crAddRegKey crAddRegKeyW
-#else
-#define crAddRegKey crAddRegKeyA
-#endif //UNICODE
-
 /*! \ingroup CrashRptAPI  
 *  \brief Manually generates an error report.
 *
@@ -1482,11 +1396,6 @@ crGetLastErrorMsgA(
 *      info.cb = sizeof(CR_INSTALL_INFO);  
 *      info.pszAppName = _T("My App Name");
 *      info.pszAppVersion = _T("1.2.3");
-*      info.pszEmailSubject = "Error Report from My App v.1.2.3";
-*      // The address to send reports by E-mail
-*      info.pszEmailTo = _T("myname@hotmail.com");  
-*      // The URL to send reports via HTTP connection
-*      info.pszUrl = _T("http://myappname.com/utils/crashrpt.php"); 
 *      info.pfnCrashCallback = CrashCallback; t
 *
 *      // Install crash reporting
