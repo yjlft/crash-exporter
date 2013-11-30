@@ -300,23 +300,7 @@ int CCrashHandler::Init(
         ATLASSERT(nSetThreadHandlers==0);
         crSetErrorMsg(_T("Couldn't set C++ exception handlers for main execution thread."));
         return 1;
-    }
-	    
-    // If user wants us to send pending error reports that were queued recently,
-    // launch the CrashSender.exe and make it to alert user and send the reports.
-    if(dwFlags&CR_INST_SEND_QUEUED_REPORTS)
-    {
-        // Create temporary shared mem.
-        CSharedMem tmpSharedMem;    
-        if(0!=LaunchCrashSender(tmpSharedMem.GetName(), TRUE, NULL))
-        {
-            crSetErrorMsg(_T("Couldn't launch CrashSender.exe process."));
-            return 1;
-        }
-
-        m_pTmpCrashDesc = m_pCrashDesc;
-        m_pTmpSharedMem = &m_SharedMem;
-    }
+    }    
 
 	// The following code is intended to fix the issue with 32-bit applications in 64-bit environment.
 	// http://support.microsoft.com/kb/976038/en-us

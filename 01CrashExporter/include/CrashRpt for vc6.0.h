@@ -479,11 +479,11 @@ crSetCrashCallbackA(
 #define CR_INST_CRT_EXCEPTION_HANDLERS         0x1FFE //!< Install exception handlers for the linked CRT module.
 
 #define CR_INST_SHOW_GUI                       0x2000 //!< Do not show GUI, send report silently (use for non-GUI apps only).
-#define CR_INST_APP_RESTART                   0x10000 //!< Restart the application on crash.
-#define CR_INST_NO_MINIDUMP                   0x20000 //!< Do not include minidump file to crash report.
-#define CR_INST_SEND_QUEUED_REPORTS           0x40000 //!< CrashRpt should send error reports that are waiting to be delivered.
-#define CR_INST_ALLOW_ATTACH_MORE_FILES		 0x400000 //!< Adds an ability for user to attach more files to crash report by clicking "Attach More File(s)" item from context menu of Error Report Details dialog.
-#define CR_INST_AUTO_THREAD_HANDLERS         0x800000 //!< If this flag is set, installs exception handlers for newly created threads automatically.
+#define CR_INST_APP_RESTART                    0x4000 //!< Restart the application on crash.
+#define CR_INST_NO_MINIDUMP					   0x8000 //!< Do not include minidump file to crash report.
+#define CR_INST_NO_STACKWALK				  0x10000 //!< Do not include stackwalk file to crash report.
+#define CR_INST_ALLOW_ATTACH_MORE_FILES		  0x20000 //!< Adds an ability for user to attach more files to crash report by clicking "Attach More File(s)" item from context menu of Error Report Details dialog.
+#define CR_INST_AUTO_THREAD_HANDLERS          0x40000 //!< If this flag is set, installs exception handlers for newly created threads automatically.
 
 /*! \ingroup CrashRptStructs
 *  \struct CR_INSTALL_INFOW()
@@ -514,29 +514,6 @@ crSetCrashCallbackA(
 *       If this equals to NULL, product version is extracted from the executable file which started 
 *       the caller process, and this product version is used as application version. If the executable file
 *       doesn's have a version info resource, the \ref crInstall() function will fail.
-* 
-*    \b pszEmailTo [in, optional] 
-*
-*       This is the email address of the recipient of error reports (or several E-mail adresses separated with semicolon), 
-*		for example "name@example.com" or "person1@example.com;person2@someserver.com". If several E-mail addresses are
-*       specified, error report will be delivered to each of them. If this parameter equals to NULL, 
-*       the crash report won't be sent using E-mail client.
-*
-*       Keep this NULL if you plan to use large error reports (more than several MB in size), because
-*       large emails may be rejected by the mail server. 
-*
-*    \b pszEmailSubject [in, optional] 
-*
-*       This is the subject of the email message. If this parameter is NULL,
-*       the default subject of form '[app_name] [app_version] Error Report' is generated.
-*
-*    \a pszUrl is the URL of a server-side script that would receive crash report data via HTTP or HTTPS 
-*       connection. If this parmeter is NULL, HTTP(S) connection won't be used to send crash reports. For
-*       example of a server-side script that can receive crash reports, see \ref sending_error_reports.
-*
-*       HTTP(S) transport is the recommended way of sending large error reports (more than several MB in size).
-*       To define a custom port for HTTP(S) connection, use the following URL format: "http://example.com[:port]/crashrpt.php" or
-*       "https://example.com[:port]/crashrpt.php", where optional \a port is the placeholder for the port number.
 *
 *    \b pszCrashSenderPath [in, optional] 
 *
@@ -586,19 +563,10 @@ crSetCrashCallbackA(
 *             If this is specified, CrashRpt checks if it's time to remind user about recent errors in the application and offers to send
 *             all queued error reports.
 *
-*    <tr><td> \ref CR_INST_STORE_ZIP_ARCHIVES     
-*        <td> <b>Available since v.1.2.7</b> This parameter can be used in couple with \ref CR_INST_DONT_SEND_REPORT flag to store not only uncompressed
-*             error report files, but also ZIP archives. By default (if this flag omitted) CrashRpt stores all error report files
-*             in uncompressed state.
-*
 *    <tr><td> \ref CR_INST_SEND_MANDATORY     
 *        <td> <b>Available since v.1.3.1</b> This parameter makes sending procedure mandatory by removing the "Close" button
 *			  and "Other actions..." button from the Error Report dialog. Typically, it is not recommended to use this flag,
 *             unless you intentionally want users to always send error reports for your application.
-*    <tr><td> \ref CR_INST_SHOW_ADDITIONAL_INFO_FIELDS     
-*        <td> <b>Available since v.1.3.1</b> This parameter makes "Your E-mail" and "Describe what you were doing when the 
-*             problem occurred" fields of Error Report dialog always visible. By default (when this parameter not specified),
-*             these fields are hidden and user needs to click the "Provide additional info (recommended)" link to show them.
 *
 *    <tr><td> \ref CR_INST_ALLOW_ATTACH_MORE_FILES     
 *        <td> <b>Available since v.1.3.1</b> Adds an ability for user to attach more files to crash report by choosing 
@@ -609,12 +577,6 @@ crSetCrashCallbackA(
 *             all threads that will be created in the future. This flag only works if CrashRpt is compiled as a DLL, it does 
 *             not work if you compile CrashRpt as static library.
 *   </table>
-*
-*   \b pszPrivacyPolicyURL [in, optional] 
-*
-*     This parameter defines the URL for the Privacy Policy hyperlink of the 
-*     Error Report dialog. If this parameter is NULL, the link is not displayed. For information on 
-*     the Privacy Policy, see \ref error_report. This parameter is available since v1.1.2.
 *
 *   \b pszDebugHelpDLL [in, optional] 
 *  
@@ -644,27 +606,7 @@ crSetCrashCallbackA(
 *     command-line arguments for the application when it is restarted (when using \ref CR_INST_APP_RESTART flag). 
 *     Do not include the name of the executable in the command line; it is added automatically. This parameter 
 *     can be NULL. Available since v.1.2.4.
-*
-*   \b pszLangFilePath [in, optional]
-*
-*     This parameter defines the absolute path (including file name) for language file.
-*     If this is NULL, the lang file is assumed to be located in the same dir as CrashSender.exe file and have 
-*     the name crashrpt_lang.ini.
-*     This parameter is available since v.1.2.4.
 * 
-*   \b pszEmailText [in, optional]
-*
-*     This parameter defines the custom E-mail text that is used when deliverying error report
-*     as E-mail. If this is NULL, the default E-mail text is used. It is recommended to set this parameter with NULL.
-*     This parameter is available since v.1.2.4.
-*  
-*   \b pszSmtpProxy [in, optional] 
-*
-*     This parameter defines the network address (IP or domain) and, optionally, port formatted as "address[:port]" 
-*     of SMTP server. Examples: "192.168.1.1:2525", "mail.example.com:25". 
-*     If this parameter is NULL, the SMTP server address is resolved using the MX record of recipient's mailbox. 
-*     You should typically set this parameter with NULL, except in the
-*     case when your software is a server and custom SMTP configuration is required. This parameter is available since v.1.2.4.
 *  
 *   \b pszCustomSenderIcon [in, optional] 
 *
@@ -680,16 +622,6 @@ crSetCrashCallbackA(
 *     identifier is used.
 *     Example: "D:\MyApp\Resources.dll, -128". 
 *  
-*   \b pszSmtpLogin [in, optional] 
-*      
-*     This parameter defines the login name for SMTP authentication. It is typically used together with 
-*     \ref pszSmtpProxy and \ref pszSmtpPassword parameter. 
-*     If this parameter is ommitted (NULL), no SMTP autentication is used. This parameter is available since v.1.3.1.
-*
-*   \b pszSmtpPassword [in, optional] 
-*      
-*     This parameter defines the password for SMTP authentication. It is used in pair with \ref pszSmtpLogin parameter. 
-*     This parameter is available since v.1.3.1.
 */
 
 typedef struct tagCR_INSTALL_INFOW

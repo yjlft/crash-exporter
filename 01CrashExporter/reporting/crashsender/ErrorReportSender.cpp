@@ -466,6 +466,13 @@ BOOL CErrorReportSender::OnMinidumpProgress(const PMINIDUMP_CALLBACK_INPUT Callb
 //+ Create StackWalker Info.
 BOOL CErrorReportSender::CreateStackWalkerInfo()
 {
+	// Check our config - should we generate the minidump or not?
+	if(m_CrashInfo.m_bGenerateCrashWalk==FALSE)
+	{
+		m_Assync.SetProgress(_T("Crash StackWalk generation disabled; skipping."), 0, false);
+		return FALSE;
+	}
+
 	BOOL bStatus = FALSE;
 	HANDLE hFile = NULL;
 	CString sStackWalkerFile = m_CrashInfo.GetReport(m_nCurReport)->
@@ -526,6 +533,13 @@ cleanup:
 // This method creates the minidump of the process
 BOOL CErrorReportSender::CreateMiniDump()
 {   
+	// Check our config - should we generate the minidump or not?
+	if(m_CrashInfo.m_bGenerateMinidump==FALSE)
+	{
+		m_Assync.SetProgress(_T("Crash dump generation disabled; skipping."), 0, false);
+		return FALSE;
+	}
+
 	BOOL bStatus = FALSE;
 	HMODULE hDbgHelp = NULL;
 	HANDLE hFile = NULL;
@@ -536,13 +550,6 @@ BOOL CErrorReportSender::CreateMiniDump()
 	//std::vector<ERIFileItem> files_to_add;
 	ERIFileItem fi;
 	CString sErrorMsg;
-
-	// Check our config - should we generate the minidump or not?
-	if(m_CrashInfo.m_bGenerateMinidump==FALSE)
-	{
-		m_Assync.SetProgress(_T("Crash dump generation disabled; skipping."), 0, false);
-		return TRUE;
-	}
 
 	// Update progress
 	m_Assync.SetProgress(_T("Creating crash dump file..."), 0, false);

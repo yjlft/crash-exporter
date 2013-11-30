@@ -466,12 +466,12 @@ crSetCrashCallbackA(
 #define CR_INST_ALL_POSSIBLE_HANDLERS          0x1FFF //!< Install all possible exception handlers.
 #define CR_INST_CRT_EXCEPTION_HANDLERS         0x1FFE //!< Install exception handlers for the linked CRT module.
 
-#define CR_INST_SHOW_GUI				       0x2000 //!< show GUI, send report silently (use for GUI apps only).
-#define CR_INST_APP_RESTART                   0x10000 //!< Restart the application on crash.
-#define CR_INST_NO_MINIDUMP                   0x20000 //!< Do not include minidump file to crash report.
-#define CR_INST_SEND_QUEUED_REPORTS           0x40000 //!< CrashRpt should send error reports that are waiting to be delivered.
-#define CR_INST_ALLOW_ATTACH_MORE_FILES		 0x400000 //!< Adds an ability for user to attach more files to crash report by clicking "Attach More File(s)" item from context menu of Error Report Details dialog.
-#define CR_INST_AUTO_THREAD_HANDLERS         0x800000 //!< If this flag is set, installs exception handlers for newly created threads automatically.
+#define CR_INST_SHOW_GUI                       0x2000 //!< Do not show GUI, send report silently (use for non-GUI apps only).
+#define CR_INST_APP_RESTART                    0x4000 //!< Restart the application on crash.
+#define CR_INST_NO_MINIDUMP					   0x8000 //!< Do not include minidump file to crash report.
+#define CR_INST_NO_STACKWALK				  0x10000 //!< Do not include stackwalk file to crash report.
+#define CR_INST_ALLOW_ATTACH_MORE_FILES		  0x20000 //!< Adds an ability for user to attach more files to crash report by clicking "Attach More File(s)" item from context menu of Error Report Details dialog.
+#define CR_INST_AUTO_THREAD_HANDLERS          0x40000 //!< If this flag is set, installs exception handlers for newly created threads automatically.
 
 /*! \ingroup CrashRptStructs
 *  \struct CR_INSTALL_INFOW()

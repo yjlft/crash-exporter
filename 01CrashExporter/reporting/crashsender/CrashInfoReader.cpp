@@ -345,6 +345,7 @@ CCrashInfoReader::CCrashInfoReader()
 	m_bStoreZIPArchives = FALSE;
 	m_bAppRestart = FALSE;
 	m_bGenerateMinidump = TRUE;
+	m_bGenerateCrashWalk = TRUE;
 	m_MinidumpType = MiniDumpNormal;
 	m_bAddScreenshot = FALSE;
 	m_dwScreenshotFlags = 0;
@@ -502,6 +503,7 @@ int CCrashInfoReader::UnpackCrashDescription(CErrorReportInfo& eri)
 	m_bAllowAttachMoreFiles = (dwInstallFlags&CR_INST_ALLOW_ATTACH_MORE_FILES)!=0;
 	m_bAppRestart = (dwInstallFlags&CR_INST_APP_RESTART)!=0;
 	m_bGenerateMinidump = (dwInstallFlags&CR_INST_NO_MINIDUMP)==0;
+	m_bGenerateCrashWalk = (dwInstallFlags&CR_INST_NO_STACKWALK)==0;
 	m_MinidumpType = m_pCrashDesc->m_MinidumpType;    
 	UnpackString(m_pCrashDesc->m_dwRestartCmdLineOffs, m_sRestartCmdLine);
 	UnpackString(m_pCrashDesc->m_dwPathToDebugHelpDllOffs, m_sDbgHelpPath);

@@ -233,6 +233,7 @@ public:
 	BOOL        m_bAppRestart;          // Should we restart the crashed application?
 	CString     m_sRestartCmdLine;      // Command line for crashed app restart.
 	BOOL        m_bGenerateMinidump;    // Should we generate crash minidump file?
+	BOOL		m_bGenerateCrashWalk;   // Should we generate crash CrashWalk file?
 	MINIDUMP_TYPE m_MinidumpType;       // Minidump type.
 	BOOL        m_bAddScreenshot;       // Should we add a desktop screenshot to error report?
 	DWORD       m_dwScreenshotFlags;    // Screenshot taking options.

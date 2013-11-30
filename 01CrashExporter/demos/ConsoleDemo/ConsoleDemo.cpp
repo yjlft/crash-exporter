@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
    // info.pszAppName = _T("CrashRpt Console Test"); // App name
   //  info.pszAppVersion = _T("1.0.0");              // App version
 	//info.pszRestartCmdLine = _T("/restart"); 
-	//info.dwFlags = info.dwFlags|CR_INST_SHOW_GUI;
+	info.dwFlags = info.dwFlags|CR_INST_NO_STACKWALK|CR_INST_NO_MINIDUMP;
 
     // Install crash handlers
     int nInstResult = crInstall(&info);            
