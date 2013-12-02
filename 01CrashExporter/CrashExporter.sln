@@ -43,6 +43,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VS2010MFCDemo", "demos\VS20
 		{939312D6-690A-4103-92C5-4D89025BF10A} = {939312D6-690A-4103-92C5-4D89025BF10A}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "tests\Tests_vs2010.vcxproj", "{C6941433-40EA-4307-A0A2-39BFB844367E}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -174,6 +176,18 @@ Global
 		{E1B9F88D-B95E-436B-AC27-1A88AF2AF583}.Release|Win32.ActiveCfg = Release|Win32
 		{E1B9F88D-B95E-436B-AC27-1A88AF2AF583}.Release|Win32.Build.0 = Release|Win32
 		{E1B9F88D-B95E-436B-AC27-1A88AF2AF583}.Release|x64.ActiveCfg = Release|Win32
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Debug|Win32.Build.0 = Debug|Win32
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Debug|x64.ActiveCfg = Debug|x64
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Debug|x64.Build.0 = Debug|x64
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Release LIB|Win32.ActiveCfg = Release LIB|Win32
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Release LIB|Win32.Build.0 = Release LIB|Win32
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Release LIB|x64.ActiveCfg = Release LIB|x64
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Release LIB|x64.Build.0 = Release LIB|x64
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Release|Win32.ActiveCfg = Release|Win32
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Release|Win32.Build.0 = Release|Win32
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Release|x64.ActiveCfg = Release|x64
+		{C6941433-40EA-4307-A0A2-39BFB844367E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -38,7 +38,7 @@ CRASHRPTAPI(int) crInstallW(CR_INSTALL_INFOW* pInfo)
     if(pInfo==NULL || 
         pInfo->cb!=sizeof(CR_INSTALL_INFOW))     
     {   
-		if (pInfo->cb == 0)
+		if (pInfo != NULL && pInfo->cb == 0)
 			pInfo->cb = sizeof(CR_INSTALL_INFOW);
 		else
 		{
@@ -127,7 +127,7 @@ CRASHRPTAPI(int) crInstallA(CR_INSTALL_INFOA* pInfo)
     if(pInfo==NULL || 
         pInfo->cb!=sizeof(CR_INSTALL_INFOA))     
     {     
-		if (pInfo->cb == 0)
+		if (pInfo != NULL && pInfo->cb == 0)
 			pInfo->cb = sizeof(CR_INSTALL_INFOA);
 		else
 		{
