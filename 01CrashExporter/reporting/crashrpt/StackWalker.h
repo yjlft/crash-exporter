@@ -34,6 +34,11 @@
  * **********************************************************************/
 // #pragma once is supported starting with _MCS_VER 1000, 
 // so we need not to check the version (because we only support _MSC_VER >= 1100)!
+
+/*! \file  StackWalker.h
+*  \brief  display the callstack of the thread which you are interested.
+*/
+
 #pragma once
 #include "stdafx.h"
 #include <windows.h>

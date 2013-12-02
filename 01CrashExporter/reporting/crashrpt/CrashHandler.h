@@ -8,10 +8,11 @@ tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
 ***************************************************************************************/
 
-// File: CrashHandler.h
-// Description: Exception handling functionality.
-// Authors: mikecarruth, zexspectrum
-// Date: 2009
+/*! \file   CrashHandler.h
+*  \brief  Exception handling functionality.
+*  \date   2010
+*  \author mikecarruth, zexspectrum 
+*/
 
 #pragma once
 #include "stdafx.h"

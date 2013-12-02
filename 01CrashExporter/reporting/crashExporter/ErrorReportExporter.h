@@ -8,6 +8,10 @@ tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
 ***************************************************************************************/
 
+/*! \file  ErrorReportExporter.h
+*  \brief  Export Crash Error information, eg. minidump, stack walk, Screenshot...
+*/
+
 #pragma once
 #include "AssyncNotification.h"
 #include "tinyxml.h"

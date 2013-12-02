@@ -8,11 +8,10 @@ tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
 ***************************************************************************************/
 
-// File: Utility.h
-// Description: Miscellaneous helper functions
-// Authors: mikecarruth, zexspectrum
-// Date: 
-
+/*! \file  Utility.h
+*  \brief  Miscellaneous helper functions
+*  \author mikecarruth, zexspectrum 
+*/
 #ifndef _UTILITY_H_
 #define _UTILITY_H_
 

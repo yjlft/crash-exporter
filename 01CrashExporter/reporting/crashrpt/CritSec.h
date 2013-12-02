@@ -6,13 +6,12 @@ Use of this source code is governed by a BSD-style license
 that can be found in the License.txt file in the root of the source
 tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
-***************************************************************************************/
+***************************************************************************************/ 
 
-// File: CritSec.h
-// Description: Critical section wrapper classes. Code of CCritSec and CAutoLock classes 
-// is taken from DirectShow base classes and modified in some way.
-// Authors: zexspectrum
-// Date: 
+/*! \file  CritSec.h
+*  \brief  Critical section wrapper classes. Code of CCritSec and CAutoLock classes is taken from DirectShow base classes and modified in some way.
+*  \author zexspectrum 
+*/
 
 #ifndef _CRITSEC_H
 #define _CRITSEC_H

@@ -311,8 +311,7 @@ typedef CR_CRASH_CALLBACK_INFOA CR_CRASH_CALLBACK_INFO;
 *  CrashRpt won't be able to include them into error report.
 *
 *  It is also possible (but not recommended) to add files (see crAddFile2()), 
-*  properties (see crAddProperty()), desktop screenshots (see crAddScreenshot2())
-*  and registry keys (see crAddRegKey()) inside of the crash callback function.
+*  properties (see crAddProperty()), desktop screenshots (see crAddScreenshot2()).
 *
 *  By default, CrashRpt terminates the client application after crash report generation and
 *  launching the <i>crashExporter.exe</i> process. However, it is possible to continue program
@@ -378,7 +377,7 @@ typedef CR_CRASH_CALLBACK_INFOA CR_CRASH_CALLBACK_INFO;
 *  }
 *  \endcode
 *
-*  \sa CR_CRASH_CALLBACK_INFO, crSetCrashCallback(), crAddFile2(), crAddProperty(), crAddScreenshot2(), crAddRegKey()
+*  \sa CR_CRASH_CALLBACK_INFO, crSetCrashCallback(), crAddFile2(), crAddProperty(), crAddScreenshot2()
 */
 typedef int (CALLBACK *PFNCRASHCALLBACKW) (CR_CRASH_CALLBACK_INFOW* pInfo);
 

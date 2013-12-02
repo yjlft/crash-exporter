@@ -8,10 +8,11 @@ tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
 ***************************************************************************************/
 
-// File: AssyncNotification.h
-// Description: Provides a way to communicate between worker thread and the main thread.
-// Authors: zexspectrum
-// Date: 2009
+/*! \file  AssyncNotification.h
+*  \brief  Provides a way to communicate between worker thread and the main thread.
+*  \date   2009
+*  \author zexspectrum 
+*/
 
 #pragma once
 #include "stdafx.h"

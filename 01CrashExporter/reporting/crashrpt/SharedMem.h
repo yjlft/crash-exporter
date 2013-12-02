@@ -8,10 +8,11 @@ tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
 ***************************************************************************************/
 
-// File: SharedMem.h
-// Description: Shared memory class. Used for transferring data from crashed app to crash sender process.
-// Authors: zexspectrum
-// Date: 2010
+/*! \file  SharedMem.h
+*  \brief  Shared memory class. Used for transferring data from crashed app to crash sender process.
+*  \date   2010
+*  \author zexspectrum 
+*/
 
 #pragma once
 #include "stdafx.h"

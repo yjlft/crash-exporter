@@ -8,10 +8,11 @@ tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
 ***************************************************************************************/
 
-// File: strconv.h
-// Description: String conversion class
-// Author: zexspectrum
-// Date: 2009-2010
+/*! \file  strconv.h
+*  \brief  String conversion class
+*  \date   2009-2010
+*  \author zexspectrum 
+*/
 
 #ifndef _STRCONV_H
 #define _STRCONV_H

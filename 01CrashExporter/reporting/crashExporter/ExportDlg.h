@@ -1,4 +1,8 @@
 #pragma once
+
+/*! \file  ExportDlg.h
+*  \brief  Show the interface of the Export Dialog
+*/
 #include "Resource.h"
 class CExportDlg : public CDialogImpl<CExportDlg>
 {

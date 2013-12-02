@@ -8,10 +8,11 @@ tree. All contributing project authors may
 be found in the Authors.txt file in the root of the source tree.
 ***************************************************************************************/
 
-// File: CrashInfoReader.h
-// Description: Retrieves crash information passed from CrashRpt.dll.
-// Authors: zexspectrum
-// Date: 2010
+/*! \file  CrashInfoReader.h
+*  \brief  Retrieves crash information passed from CrashRpt.dll.
+*  \date   2010
+*  \author zexspectrum 
+*/
 
 #pragma once
 #include "stdafx.h"
