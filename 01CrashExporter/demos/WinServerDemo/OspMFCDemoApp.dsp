@@ -80,7 +80,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 OspLib.lib CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\OspMFCDemoApp.pdb" /debug /machine:I386 /nodefaultlib:"mfc42d.lib mfcs42.lib msvcrtd.lib" /out:"..\..\bin\OspMFCDemoAppd.exe" /pdbtype:sept /libpath:"lib" /libpath:"..\..\lib"
+# ADD LINK32 OspLib.lib CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\OspMFCDemoApp.pdb" /debug /machine:I386 /nodefaultlib:"mfc42.lib" /nodefaultlib:"mfcs42.lib" /nodefaultlib:"msvcrt.lib" /out:"..\..\bin\OspMFCDemoAppd.exe" /pdbtype:sept /libpath:"lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
