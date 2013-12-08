@@ -11,21 +11,20 @@
 #include "KillProcess.h"
 
 
-WinServer* WinServer::m_ptrServer = NULL;
-LPCTSTR WinServer::m_szWinServerName = NULL;
+WinServer* WinServer::m_pWinServer = NULL;
 //
 WinServer* WinServer::Instance()
 {
-	if (NULL == m_ptrServer)
+	if (NULL == m_pWinServer)
 	{
-		m_ptrServer = new WinServer(m_szWinServerName);
+		m_pWinServer = new WinServer();
 	}
-	return m_ptrServer;
+	return m_pWinServer;
 }
 //
-WinServer::WinServer(LPCTSTR strServerName):_dwCheckPoint(0)		 
+WinServer::WinServer()	 
 {	
-	m_szLauchAppName = NULL;
+	m_pszLauchAppName = NULL;
 	m_pFindKillProcess = NULL;
 }
 
@@ -38,41 +37,55 @@ WinServer::~WinServer()
 	}
 }
 //
-LPTSTR WinServer :: GetLastErrorText( LPTSTR lpszBuf, DWORD dwSize ) 
+LPTSTR WinServer::GetLastErrorText(LPTSTR pszBuf, DWORD dwSize) 
 {
-	LPTSTR lpszTemp = 0;
+	LPTSTR pszTemp = 0;
 	
 	DWORD dwRet =	::FormatMessage(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |FORMAT_MESSAGE_ARGUMENT_ARRAY,
 		0,
 		GetLastError(),
 		LANG_NEUTRAL,
-		(LPTSTR)&lpszTemp,
+		pszTemp,
 		0,
 		0
 		);
 	
-	if( !dwRet || (dwSize < dwRet+14) )
-		lpszBuf[0] = _T('\0');
-	else {
-		lpszTemp[_tcsclen(lpszTemp)-2] = _T('\0');  //remove cr/nl characters
-		_tcscpy(lpszBuf, lpszTemp);
+	if( !dwRet || (dwSize < dwRet + 14) )
+		pszBuf[0] = _T('\0');
+	else 
+	{
+		pszTemp[_tcsclen(pszTemp) - 2] = _T('\0');  //remove cr/nl characters
+		_tcscpy(pszBuf, pszTemp);
 	}
 	
-	if( lpszTemp )
-		LocalFree(HLOCAL(lpszTemp));
+	if( pszTemp )
+		LocalFree(HLOCAL(pszTemp));
 	
-	return lpszBuf;
-}
-void WinServer::SetLauchAppName(LPCTSTR szAppName)
-{
-	m_szLauchAppName = szAppName;
+	return pszBuf;
 }
 
-void WinServer::SetWinServerName(LPCTSTR szWinServerName)
+int WinServer::Init(WINSERVER_INFO* pInfo)
 {
-	 m_szWinServerName = szWinServerName;
+	int nStatus = -1;
+	
+    // Validate input parameters.
+    if(pInfo == NULL ||  pInfo->cb != sizeof(WINSERVER_INFO))     
+		return 1;
+	if (pInfo->pszWinServerName == NULL)
+		return 2;
+	if (pInfo->pszLauchAppName == NULL)
+		return 3;
+	m_pszWinServerName = pInfo->pszWinServerName;
+	m_pszLauchAppName = pInfo->pszLauchAppName;
+	m_pszLauchAppCmdLine = pInfo->pszLauchAppCmdLine;
+	m_bLauchApp = (pInfo->dwFlags&NOT_LAUCH_APP) == 0;
+	m_bkillAppBeforeLauch = (pInfo->dwFlags&NOT_KILL_PRELAUCHED_APP) == 0;
+	m_bKillAppAfterStopService = (pInfo->dwFlags&NOT_KILL_LAUCHED_APP) == 0;
+	
+	return 0;
 }
+
 void WinServer::Run(DWORD dwCmdCode)
 {
 	switch (dwCmdCode)
@@ -93,15 +106,15 @@ void WinServer::Run(DWORD dwCmdCode)
 		{
 			SERVICE_TABLE_ENTRY dispatchTable[] =
 			{
-				{ LPTSTR(m_szWinServerName), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
+				{ LPTSTR(m_pszWinServerName), (LPSERVICE_MAIN_FUNCTION)ServiceMain },
 				{ 0, 0 }
 			};
 			//
-			BOOL bRet = StartServiceCtrlDispatcher(dispatchTable);
-			if (FALSE == bRet)
+			if (!StartServiceCtrlDispatcher(dispatchTable))
 			{
-				TCHAR szBuf[256];
-				GetLastErrorText(szBuf,255);
+				TCHAR szBuf[MAX_LEN];
+				GetLastErrorText(szBuf, MAX_LEN);
+				_tprintf(_T("CODE_NONE GetLastErrorText is %s.\n"), szBuf);
 			}
 		}
 		break;
@@ -109,50 +122,55 @@ void WinServer::Run(DWORD dwCmdCode)
 		break;
 	}
 }
-void WINAPI WinServer::ServiceMain(DWORD argc, LPTSTR * argv)
+void WINAPI WinServer::ServiceMain(DWORD argc, LPTSTR* argv)
 {
-	_ASSERTE(m_ptrServer != NULL);
+	_ASSERTE(m_pWinServer != NULL);
+	if (m_pWinServer == NULL)
+		return;
 	
-	m_ptrServer->_hServiceStatus =	RegisterServiceCtrlHandler(m_ptrServer->m_szWinServerName,WinServer::ServiceCtrl);
+	m_pWinServer->m_hServiceStatus =	RegisterServiceCtrlHandler(
+		m_pWinServer->m_pszWinServerName, WinServer::ServiceCtrl);
 	
-	if( m_ptrServer->_hServiceStatus )
+	if( m_pWinServer->m_hServiceStatus )
 	{
-		m_ptrServer->ReportStatus(SERVICE_START_PENDING);
-
-		m_ptrServer->ReportStatus(SERVICE_STOPPED);
+		m_pWinServer->ReportStatus(SERVICE_START_PENDING);
+		
+		m_pWinServer->ReportStatus(SERVICE_STOPPED);
 	}			
 }
 //
 void WINAPI WinServer::ServiceCtrl(DWORD dwCtrlCode)
 {
-	_ASSERT(m_ptrServer);
-
+	_ASSERT(m_pWinServer);
+	if (m_pWinServer == NULL)
+		return;
+	
 	switch( dwCtrlCode ) {
 	case SERVICE_CONTROL_STOP:				
 		{
-			Instance()->_tServiceStatus.dwCurrentState = SERVICE_STOP_PENDING;
+			m_pWinServer->m_ServiceStatus.dwCurrentState = SERVICE_STOP_PENDING;
 		}
 		break;		
 	case SERVICE_CONTROL_PAUSE:	
 		{
-			Instance()->_tServiceStatus.dwCurrentState = SERVICE_PAUSE_PENDING;
-			Instance()->ReportStatus(Instance()->_tServiceStatus.dwCurrentState);
+			m_pWinServer->m_ServiceStatus.dwCurrentState = SERVICE_PAUSE_PENDING;
+			m_pWinServer->ReportStatus(m_pWinServer->m_ServiceStatus.dwCurrentState);
 		}
 		break;		
 	case SERVICE_CONTROL_CONTINUE:
 		{
-			Instance()->_tServiceStatus.dwCurrentState = SERVICE_CONTINUE_PENDING;
-			Instance()->ReportStatus(Instance()->_tServiceStatus.dwCurrentState);
+			m_pWinServer->m_ServiceStatus.dwCurrentState = SERVICE_CONTINUE_PENDING;
+			m_pWinServer->ReportStatus(m_pWinServer->m_ServiceStatus.dwCurrentState);
 		}		
 		break;		
 	case SERVICE_CONTROL_SHUTDOWN:
 		{
-			Instance()->_tServiceStatus.dwCurrentState = SERVICE_CONTROL_SHUTDOWN;					
+			m_pWinServer->m_ServiceStatus.dwCurrentState = SERVICE_CONTROL_SHUTDOWN;					
 		}		
 		break;		
 	case SERVICE_CONTROL_INTERROGATE:
 		{
-			Instance()->ReportStatus(Instance()->_tServiceStatus.dwCurrentState);
+			m_pWinServer->ReportStatus(m_pWinServer->m_ServiceStatus.dwCurrentState);
 		}		
 		break;		
 	default:
@@ -162,94 +180,103 @@ void WINAPI WinServer::ServiceCtrl(DWORD dwCtrlCode)
 //
 void WinServer::InstanceServer()
 {
-	char achPath[MAX_LEN] = {0};
-	if(GetModuleFileName( 0, achPath, MAX_LEN - 1 ) != 0)
+	TCHAR szPath[MAX_LEN] = {0};
+	
+	if(GetModuleFileName(0, szPath, MAX_LEN - 1) != 0)
 	{
 		SC_HANDLE schSCManager = OpenSCManager(NULL,NULL,SC_MANAGER_ALL_ACCESS);
-		if(schSCManager) 
+		if(schSCManager == NULL) 
+			return;
+		
+		SC_HANDLE schService = CreateService(
+			schSCManager,
+			m_pszWinServerName,
+			m_pszWinServerName,
+			SERVICE_ALL_ACCESS,
+			SERVICE_INTERACTIVE_PROCESS|SERVICE_WIN32_SHARE_PROCESS,
+			SERVICE_AUTO_START,
+			SERVICE_ERROR_NORMAL,
+			szPath,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL);
+		if( schService ) 
 		{
-			SC_HANDLE schService =	CreateService(
-							schSCManager,
-							m_szWinServerName,
-							m_szWinServerName,
-							SERVICE_ALL_ACCESS,
-							SERVICE_INTERACTIVE_PROCESS|SERVICE_WIN32_SHARE_PROCESS,
-							SERVICE_AUTO_START,
-							SERVICE_ERROR_NORMAL,
-							achPath,
-							NULL,
-							NULL,
-							NULL,
-							NULL,
-							NULL);
-			if( schService ) 
-			{
-				_tprintf(_T("%s installed.\n"), (LPCTSTR)m_szWinServerName );
-				CloseServiceHandle(schService);
-			} 
-			else 
-			{
-				_tprintf(_T("CreateService failed\n"));
-			}
-			
-			CloseServiceHandle(schSCManager);
+			_tprintf(_T("Create %s service success.\n"), m_pszWinServerName );
+			CloseServiceHandle(schService);
+		} 
+		else 
+		{
+			_tprintf(_T("Create %s service failed.\n"), m_pszWinServerName );
 		}
+		
+		CloseServiceHandle(schSCManager);
 	}
 }
 //
 void WinServer::UninstanceServer()
 {
-	SC_HANDLE schSCManager = OpenSCManager(NULL,NULL,SC_MANAGER_ALL_ACCESS);
-	if(schSCManager) 
-	{
-		SC_HANDLE schService =	OpenService(schSCManager, m_szWinServerName, SERVICE_ALL_ACCESS);		
-		if( schService ) 
-		{
-			if( ControlService(schService, SERVICE_CONTROL_STOP, &_tServiceStatus) ) 
-			{
-				_tprintf(_T("Stopping %s."), (LPCTSTR)m_szWinServerName);
-				Sleep(1000);
-				
-				while(QueryServiceStatus(schService, &_tServiceStatus)) 
-				{
-					if(_tServiceStatus.dwCurrentState == SERVICE_STOP_PENDING) 
-					{
-						_tprintf(_T("."));
-						Sleep(1000);
-					} 
-					else
-					{
-						break;
-					}
-				}
-				
-				if( _tServiceStatus.dwCurrentState == SERVICE_STOPPED )
-				{
-					_tprintf(_T("\n%s stopped.\n"), m_szWinServerName);
-				}
-				else
-				{
-					_tprintf(_T("\n%s failed to stop.\n"), m_szWinServerName);
-				}
-			}
-			
-			// now remove the service
-			if( DeleteService(schService) ) 
-				_tprintf(_T("%s removed.\n"), m_szWinServerName); 
-			else 
-				_tprintf(_T("DeleteService failed\n"));			
-			CloseServiceHandle(schService);
-		} 
-		else 
-		{
-			_tprintf(_T("OpenService failed \n"));
-		}
-		//CloseServiceHandle(schSCManager);
-	} 
-	else 
+	SC_HANDLE schSCManager = NULL;
+	SC_HANDLE schService = NULL;
+	schSCManager = OpenSCManager(NULL,NULL,SC_MANAGER_ALL_ACCESS);
+	if(schSCManager == NULL) 
 	{
 		_tprintf(_T("OpenSCManager failed\n"));
+		return;
 	}
+	
+	schService = OpenService(schSCManager, m_pszWinServerName, SERVICE_ALL_ACCESS);		
+	if( schService == NULL) 
+	{
+		_tprintf(_T("OpenService failed \n"));
+		goto cleanup;
+	}
+	
+	if( ControlService(schService, SERVICE_CONTROL_STOP, &m_ServiceStatus) ) 
+	{
+		_tprintf(_T("Stopping %s."), m_pszWinServerName);
+		Sleep(1000);
+		
+		while(QueryServiceStatus(schService, &m_ServiceStatus)) 
+		{
+			if(m_ServiceStatus.dwCurrentState == SERVICE_STOP_PENDING) 
+			{
+				_tprintf(_T("."));
+				Sleep(1000);
+			} 
+			else
+				break;
+		}
+		
+		if( m_ServiceStatus.dwCurrentState == SERVICE_STOPPED )
+			_tprintf(_T("\n%s stop success.\n"), m_pszWinServerName);
+		
+		else
+			_tprintf(_T("\n%s stop failed.\n"), m_pszWinServerName);
+	}
+	if (m_bKillAppAfterStopService)
+	{
+		int bRet = KillLauchedApp();	
+		if (0 == bRet)
+			_tprintf(_T("\nKill Lauched App process success.\n"));
+		else if (1 == bRet)
+			_tprintf(_T("\nFind Lauched App failed.\n"));
+		else if (2 == bRet)
+			_tprintf(_T("\nKill Lauched App process failed.\n"));
+	}	
+	// now remove the service
+	if( DeleteService(schService) ) 
+		_tprintf(_T("Remove %s success.\n"), m_pszWinServerName); 
+	else 
+		_tprintf(_T("Remove %s failed.\n"));			
+	
+cleanup:
+	if (schService != NULL)
+		CloseHandle(schService);
+	if (schSCManager != NULL)
+		CloseHandle(schSCManager);
 }
 
 //
@@ -257,48 +284,45 @@ void WinServer::RunService()
 {
 	SC_HANDLE schSCManager = NULL;
 	SC_HANDLE schService = NULL;
+	
 	schSCManager = ::OpenSCManager(NULL,NULL,SC_MANAGER_ALL_ACCESS);
-	if( schSCManager ) 
-	{
-		schService = ::OpenService(schSCManager,m_szWinServerName,SERVICE_ALL_ACCESS);
-		
-		if( schService ) 
-		{
-			// try to start the service
-			_tprintf(_T("Starting up %s."), m_szWinServerName);
-			if (m_szLauchAppName != NULL)
-			{
-				if (GetFindKillProcessInstance()->FindProcess(m_szLauchAppName))
-				{
-					_tprintf(_T("\nFind prev App process.\n"));
-					if (GetFindKillProcessInstance()->KillProcess(m_szLauchAppName, TRUE))
-					{
-						::Sleep(500);
-						_tprintf(_T("\nKill prev App process success.\n"));
-					}
-					else
-						_tprintf(_T("\nKill prev App process failed.\n"));
-				}
-				
-				if (LaunchApp(m_szLauchAppName, _T(" /start")))
-					_tprintf(_T("\nRun new App process success.\n"));
-				else
-				_tprintf(_T("\nRun new App process failed.\n"));
-			}
-
-			::CloseServiceHandle(schService);
-		} 
-		else 
-		{
-			_tprintf(_T("OpenService failed\n"));
-		}
-
-		::CloseServiceHandle(schSCManager);
-	} 
-	else 
+	if(schSCManager == NULL) 
 	{
 		_tprintf(_T("OpenSCManager failed\n"));
-	}	
+		return;
+	}
+	
+	schService = OpenService(schSCManager, m_pszWinServerName, SERVICE_ALL_ACCESS);		
+	if( schService == NULL) 
+	{
+		_tprintf(_T("OpenService failed \n"));
+		goto cleanup;
+	}
+	
+	// try to start the service
+	_tprintf(_T("Starting up %s."), m_pszWinServerName);
+	if (m_pszLauchAppName == NULL)
+	{
+		_tprintf(_T("\nLauchAppName is NULL"));
+		goto cleanup;
+	}
+	
+	if (m_bkillAppBeforeLauch)
+		KillLauchedApp();
+	
+	if (m_bLauchApp)
+	{
+		if (LaunchApp(m_pszLauchAppName, (LPTSTR)m_pszLauchAppCmdLine))
+			_tprintf(_T("\nRun new App process success.\n"));
+		else
+			_tprintf(_T("\nRun new App process failed.\n"));
+	}
+	
+cleanup:
+	if (schService != NULL)
+		CloseHandle(schService);
+	if (schSCManager != NULL)
+		CloseHandle(schSCManager);
 }
 
 //
@@ -306,54 +330,59 @@ void WinServer::StopService()
 {
 	SC_HANDLE schSCManager = NULL;
 	SC_HANDLE schService = NULL;
+	
 	schSCManager = ::OpenSCManager(NULL,NULL,SC_MANAGER_ALL_ACCESS);
-	if( schSCManager ) 
+	if(schSCManager == NULL) 
 	{
-		schService = ::OpenService(schSCManager,m_szWinServerName, SERVICE_ALL_ACCESS);
-		if( schService ) 
-		{
-			if (m_szLauchAppName != NULL)
-			{
-				if (GetFindKillProcessInstance()->FindProcess(m_szLauchAppName))
-				{
-					if (GetFindKillProcessInstance()->KillProcess(m_szLauchAppName, TRUE))
-						_tprintf(_T("\nKill App process success.\n"));
-					else
-						_tprintf(_T("\nKill App process failed.\n"));
-				}
-			}
-			::CloseServiceHandle(schService);
-		} 
-		else 
-		{			
-			_tprintf(_T("OpenService failed \n"));
-		}
-		::CloseServiceHandle(schSCManager);
-	} 
-	else 
-	{
-		_tprintf(_T("OpenSCManager failed \n"));
+		_tprintf(_T("OpenSCManager failed\n"));
+		return;
 	}
+	
+	schService = OpenService(schSCManager, m_pszWinServerName, SERVICE_ALL_ACCESS);		
+	if( schService == NULL) 
+	{
+		_tprintf(_T("OpenService failed \n"));
+		goto cleanup;
+	}
+	if (m_pszLauchAppName == NULL)
+		goto cleanup;
+	
+	if (m_bKillAppAfterStopService)
+	{
+		int bRet = KillLauchedApp();	
+		if (0 == bRet)
+			_tprintf(_T("\nKill Lauched App process success.\n"));
+		else if (1 == bRet)
+			_tprintf(_T("\nFind Lauched App failed.\n"));
+		else if (2 == bRet)
+			_tprintf(_T("\nKill Lauched App process failed.\n"));
+	}
+	
+cleanup:
+	if (schService != NULL)
+		CloseHandle(schService);
+	if (schSCManager != NULL)
+		CloseHandle(schSCManager);
 }
 //
 BOOL WinServer::ReportStatus(DWORD dwCurrentState, DWORD dwWaitHint,DWORD dwErrExit)
 {
-	_tServiceStatus.dwServiceType        = SERVICE_WIN32; 
-    _tServiceStatus.dwControlsAccepted   = SERVICE_ACCEPT_SHUTDOWN|SERVICE_ACCEPT_STOP; 
-    _tServiceStatus.dwWin32ExitCode      = 0; 
-    _tServiceStatus.dwServiceSpecificExitCode = 0; 
-    _tServiceStatus.dwCheckPoint         = 0; 
-    _tServiceStatus.dwWaitHint           = 0; 
-	_tServiceStatus.dwCurrentState       = dwCurrentState; 
-    _tServiceStatus.dwCheckPoint         = 0; 
-    _tServiceStatus.dwWaitHint           = 0;
-	SetServiceStatus (_hServiceStatus, &_tServiceStatus);
+	m_ServiceStatus.dwServiceType        = SERVICE_WIN32; 
+    m_ServiceStatus.dwControlsAccepted   = SERVICE_ACCEPT_SHUTDOWN|SERVICE_ACCEPT_STOP; 
+    m_ServiceStatus.dwWin32ExitCode      = 0; 
+    m_ServiceStatus.dwServiceSpecificExitCode = 0; 
+    m_ServiceStatus.dwCheckPoint         = 0; 
+    m_ServiceStatus.dwWaitHint           = 0; 
+	m_ServiceStatus.dwCurrentState       = dwCurrentState; 
+    m_ServiceStatus.dwCheckPoint         = 0; 
+    m_ServiceStatus.dwWaitHint           = 0;
+	SetServiceStatus (m_hServiceStatus, &m_ServiceStatus);
 	return TRUE;
-
+	
 }
 
 // Launches App process
-BOOL WinServer::LaunchApp(LPCTSTR szAppName, LPTSTR szCmdLineParams)
+BOOL WinServer::LaunchApp(LPCTSTR pszAppName, LPTSTR pszCmdLineParams)
 {
     /* Create App process */
 	
@@ -365,7 +394,7 @@ BOOL WinServer::LaunchApp(LPCTSTR szAppName, LPTSTR szCmdLineParams)
     memset(&pi, 0, sizeof(PROCESS_INFORMATION));    
 	
     BOOL bCreateProcess = CreateProcess(
-        szAppName, szCmdLineParams, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+        pszAppName, pszCmdLineParams, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
     if(pi.hThread)
     {
         CloseHandle(pi.hThread);
@@ -376,45 +405,21 @@ BOOL WinServer::LaunchApp(LPCTSTR szAppName, LPTSTR szCmdLineParams)
         _ASSERTE(bCreateProcess);
         return FALSE;
     }
-	 
+	
     CloseHandle( pi.hProcess );
     pi.hProcess = NULL;	
 	return TRUE;
 }
-/*
-* this func has Packaged as a class, see CFindKillProcess
-*
-DWORD WINAPI KillProcessProc(LPVOID lpParam)
-{	
-	LPCTSTR szExeName = (LPCTSTR)lpParam;
-    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);  
-    PROCESSENTRY32 pe;
-	pe.dwSize = sizeof(PROCESSENTRY32);
-    HANDLE hProcess;  
-	Process32First(hSnapshot,&pe);  
-    do{  
-        if(strcmp(pe.szExeFile, szExeName)==0){ 
-            hProcess=OpenProcess(PROCESS_TERMINATE,FALSE, pe.th32ProcessID);  
-            if(hProcess){  
-                TerminateProcess(hProcess,0);  
-                CloseHandle(hProcess); 
-            }  
-        } 
-    }while(Process32Next(hSnapshot,&pe));  
-    CloseHandle(hSnapshot);  
-    return 0;  
-	
-}
 
-BOOL WinServer::KillProcess(LPCTSTR szExeName)
+int WinServer::KillLauchedApp()
 {
-	HANDLE hThread;  	
-    hThread=CreateThread(NULL, 0, KillProcessProc, (LPVOID)szExeName, 0, NULL);  
-    WaitForSingleObject(hThread, INFINITE);
-    CloseHandle(hThread);  
-	return TRUE;
+	if (0 == GetFindKillProcessInstance()->FindProcess(m_pszLauchAppName))
+		return 1;
+	
+	if (!GetFindKillProcessInstance()->KillProcess(m_pszLauchAppName, TRUE))
+		return 2;
+	return 0;
 }
-*/
 
 CFindKillProcess* WinServer::GetFindKillProcessInstance()
 {
@@ -424,3 +429,40 @@ CFindKillProcess* WinServer::GetFindKillProcessInstance()
 	}
 	return m_pFindKillProcess;
 }
+
+
+/*
+* this func has Packaged as a class, see CFindKillProcess
+*
+DWORD WINAPI KillProcessProc(LPVOID lpParam)
+{	
+LPCTSTR szExeName = (LPCTSTR)lpParam;
+HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);  
+PROCESSENTRY32 pe;
+pe.dwSize = sizeof(PROCESSENTRY32);
+HANDLE hProcess;  
+Process32First(hSnapshot,&pe);  
+do{  
+if(strcmp(pe.szExeFile, szExeName)==0){ 
+hProcess=OpenProcess(PROCESS_TERMINATE,FALSE, pe.th32ProcessID);  
+if(hProcess){  
+TerminateProcess(hProcess,0);  
+CloseHandle(hProcess); 
+}  
+} 
+}while(Process32Next(hSnapshot,&pe));  
+CloseHandle(hSnapshot);  
+return 0;  
+
+  }
+  
+	BOOL WinServer::KillProcess(LPCTSTR pszExeName)
+	{
+	HANDLE hThread;  	
+    hThread=CreateThread(NULL, 0, KillProcessProc, (LPVOID)pszExeName, 0, NULL);  
+    WaitForSingleObject(hThread, INFINITE);
+    CloseHandle(hThread);  
+	return TRUE;
+	}
+*/
+

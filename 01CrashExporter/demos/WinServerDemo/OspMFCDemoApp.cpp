@@ -13,6 +13,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+
+#define POCESS_NAME  _T("OspMFCDemoApp")
+
 /////////////////////////////////////////////////////////////////////////////
 // COspMFCDemoAppApp
 
@@ -49,15 +52,6 @@ void COspMFCDemoAppApp::start()
 	{
 	}
 }
-void COspMFCDemoAppApp::stop()
-{
-
-}
-
-void COspMFCDemoAppApp::restart()
-{
-	
-}
 
 void InitCrashExporter()
 {
@@ -72,9 +66,9 @@ void InitCrashExporter()
 	// Check result
 	if(nInstResult!=0)
 	{
-		TCHAR buff[256];
-		crGetLastErrorMsg(buff, 256); // Get last error
-		_tprintf(_T("%s\n"), buff); // and output it to the screen
+		TCHAR szbuff[256];
+		crGetLastErrorMsg(szbuff, 256); // Get last error
+		_tprintf(_T("%s\n"), szbuff); // and output it to the screen
 		return;
 	}
 }
@@ -86,25 +80,24 @@ void UnInitCrashExporter()
 }
 
 
-
-
 BOOL COspMFCDemoAppApp::InitInstance()
 {
+	m_hMutex = ::CreateMutex(NULL, FALSE, POCESS_NAME);
+	if(GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		::MessageBox(NULL, _T("程序已经在运行"), _T("提示"), MB_OK);
+		return FALSE;
+	}
+
 	// Standard initialization
 	InitCrashExporter();
 	LPWSTR *szArglist;
 	int nArgs;
-	CString strArg;
 	szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
 	if( szArglist == NULL ||nArgs != 2)
 		goto cleanup;
-	strArg = szArglist[1];
-	if (strArg == _T("/start"))
+	if ((CString)szArglist[1] == _T("/start"))
 		start();
-	else if (strArg == _T("/stop"))
-		stop();
-	else if (strArg == _T("/restart"))
-		restart();
 	else
 		goto cleanup;	//invaid arguments
 
@@ -117,5 +110,6 @@ cleanup:
 int COspMFCDemoAppApp::ExitInstance()   
 { 
 	UnInitCrashExporter();
-	return   CWinApp::ExitInstance(); 
+	CloseHandle(m_hMutex);  
+	return  CWinApp::ExitInstance(); 
 } 

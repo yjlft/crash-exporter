@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /Zi /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
 # ADD RSC /l 0x804 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -50,7 +50,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 advapi32.lib User32.lib /nologo /subsystem:console /pdb:"..\..\bin\WinServerApp.pdb" /machine:I386 /out:"..\..\bin\WinServerApp.exe"
+# ADD LINK32 Psapi.Lib advapi32.lib User32.lib /nologo /subsystem:console /pdb:"..\..\bin\WinServerApp.pdb" /debug /machine:I386 /out:"..\..\bin\WinServerApp.exe" /opt:noref
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "WinServerApp - Win32 Debug"
@@ -75,7 +75,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 advapi32.lib User32.lib /nologo /subsystem:console /pdb:"..\..\bin\WinServerApp.pdb" /debug /machine:I386 /out:"..\..\bin\WinServerAppd.exe" /pdbtype:sept
+# ADD LINK32 Psapi.Lib advapi32.lib User32.lib /nologo /subsystem:console /pdb:"..\..\bin\WinServerApp.pdb" /debug /machine:I386 /out:"..\..\bin\WinServerAppd.exe" /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -89,6 +89,10 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=E:\tmp\TestkillProcess\KillProcess.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\WinServer.cpp
 # End Source File
 # Begin Source File
@@ -99,6 +103,10 @@ SOURCE=.\WinServerMain.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=E:\tmp\TestkillProcess\KillProcess.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\WinServer.h

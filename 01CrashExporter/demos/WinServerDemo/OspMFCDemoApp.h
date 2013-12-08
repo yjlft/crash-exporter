@@ -31,8 +31,8 @@ public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 	void start();
-	void stop();
-	void restart();
+private:
+	HANDLE m_hMutex;
 	//}}AFX_VIRTUAL
 
 // Implementation

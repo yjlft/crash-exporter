@@ -4,15 +4,18 @@
 #include <WINDOWS.H>
 #include "WinServer.h"
 
-#define  WinServerName _T("TestWinServer")
-#define   LauchAppName _T("OspMFCDemoApp.exe")
 int main(int argc, char* argv[])
 {
 	if(argc < 2)
 		return 1; // No arguments passed, exit.
 
-	WinServer::Instance()->SetLauchAppName(LauchAppName);
-	WinServer::Instance()->SetWinServerName(WinServerName);
+	WINSERVER_INFO info;
+	info.cb = sizeof(WINSERVER_INFO);
+	info.pszWinServerName = _T("TestWinServer");
+	info.pszLauchAppName =  _T("OspMFCDemoApp.exe");
+	info.pszLauchAppCmdLine = _T(" /start");
+
+	WinServer::Instance()->Init(&info);
 	DWORD dwCode = CODE_NONE;
 
 	if (_tcscmp(argv[1], _T("-i"))==0)
