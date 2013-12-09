@@ -413,10 +413,11 @@ BOOL WinServer::LaunchApp(LPCTSTR pszAppName, LPTSTR pszCmdLineParams)
 
 int WinServer::KillLauchedApp()
 {
-	if (0 == GetFindKillProcessInstance()->FindProcess(m_pszLauchAppName))
+	DWORD pid = GetFindKillProcessInstance()->FindProcess(m_pszLauchAppName);
+	if (pid == 0)
 		return 1;
 	
-	if (!GetFindKillProcessInstance()->KillProcess(m_pszLauchAppName, TRUE))
+	if (!GetFindKillProcessInstance()->KillProcess(pid, TRUE))
 		return 2;
 	return 0;
 }
