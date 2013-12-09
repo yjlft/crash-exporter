@@ -6,6 +6,7 @@
 #include "OspMFCDemoAppDlg.h"
 #include "CrashRpt for vc6.0.h"
 #include "assert.h"
+#include "KillProcess.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -40,8 +41,15 @@ COspMFCDemoAppApp theApp;
 /////////////////////////////////////////////////////////////////////////////
 // COspMFCDemoAppApp initialization
 
-void COspMFCDemoAppApp::start()
+void COspMFCDemoAppApp::OnStart()
 {
+	m_hMutex = ::CreateMutex(NULL, FALSE, POCESS_NAME);
+	if(GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		::MessageBox(NULL, _T("程序已经在运行"), _T("提示"), MB_OK);
+		return;
+	}
+
 	COspMFCDemoAppDlg dlg;
 	m_pMainWnd = &dlg;
 	int nResponse = dlg.DoModal();
@@ -51,6 +59,18 @@ void COspMFCDemoAppApp::start()
 	else if (nResponse == IDCANCEL)
 	{
 	}
+}
+
+void COspMFCDemoAppApp::OnStop()
+{
+	GetFindKillProcessInstance()->KillProcess(POCESS_NAME, TRUE);
+}
+
+void COspMFCDemoAppApp::OnReStart()
+{
+	OnStop();
+	::Sleep(1000);
+	OnStart();
 }
 
 void InitCrashExporter()
@@ -79,15 +99,18 @@ void UnInitCrashExporter()
 	crUninstall();
 }
 
+CFindKillProcess* COspMFCDemoAppApp::GetFindKillProcessInstance()
+{
+	if (m_pFindKillProcess == NULL)
+	{
+		m_pFindKillProcess = new CFindKillProcess();
+	}
+	return m_pFindKillProcess;
+}
+
 
 BOOL COspMFCDemoAppApp::InitInstance()
 {
-	m_hMutex = ::CreateMutex(NULL, FALSE, POCESS_NAME);
-	if(GetLastError() == ERROR_ALREADY_EXISTS)
-	{
-		::MessageBox(NULL, _T("程序已经在运行"), _T("提示"), MB_OK);
-		return FALSE;
-	}
 
 	// Standard initialization
 	InitCrashExporter();
@@ -97,7 +120,11 @@ BOOL COspMFCDemoAppApp::InitInstance()
 	if( szArglist == NULL ||nArgs != 2)
 		goto cleanup;
 	if ((CString)szArglist[1] == _T("/start"))
-		start();
+		OnStart();
+	if ((CString)szArglist[1] == _T("/stop"))
+		OnStop();
+	if ((CString)szArglist[1] == _T("/restart"))
+		OnReStart();
 	else
 		goto cleanup;	//invaid arguments
 

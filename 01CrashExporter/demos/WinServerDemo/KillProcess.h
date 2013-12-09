@@ -79,7 +79,7 @@ protected:
 	}
 	
 public:
-	CWindowIterator(DWORD nAlloc=1024);
+	CWindowIterator(DWORD nAlloc = 1024);
 	~CWindowIterator();
 	
 	HWND Next() 

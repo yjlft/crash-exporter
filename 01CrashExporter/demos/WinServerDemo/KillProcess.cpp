@@ -222,6 +222,9 @@ BOOL CFindKillProcess::KillProcess(DWORD pid, BOOL bForce)
 BOOL CFindKillProcess::KillProcess(LPCTSTR lpModname, BOOL bForce)
 {
 	DWORD pid = FindProcess(lpModname);
+	if (pid == 0)
+		return FALSE;
+
 	if (KillProcess(pid, bForce))
 		return TRUE;
 	else

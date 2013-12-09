@@ -18,7 +18,7 @@
 // COspMFCDemoAppApp:
 // See OspMFCDemoApp.cpp for the implementation of this class
 //
-
+class CFindKillProcess;
 class COspMFCDemoAppApp : public CWinApp
 {
 public:
@@ -30,9 +30,15 @@ public:
 	public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
-	void start();
+	void OnStart();
+	void OnStop();
+	void OnReStart();
 private:
 	HANDLE m_hMutex;
+	CFindKillProcess*		GetFindKillProcessInstance(); 
+	
+	CFindKillProcess*		m_pFindKillProcess;
+
 	//}}AFX_VIRTUAL
 
 // Implementation
