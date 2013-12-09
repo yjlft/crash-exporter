@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 OspLib.lib CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\OspMFCDemoApp.pdb" /debug /machine:I386 /out:"..\..\bin\OspMFCDemoApp.exe" /libpath:"lib" /libpath:"..\..\lib"
+# ADD LINK32 Psapi.Lib OspLib.lib CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\OspMFCDemoApp.pdb" /debug /machine:I386 /out:"..\..\bin\OspMFCDemoApp.exe" /libpath:"lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "OspMFCDemoApp - Win32 Debug"
@@ -80,7 +80,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 OspLib.lib CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\OspMFCDemoApp.pdb" /debug /machine:I386 /nodefaultlib:"mfc42.lib" /nodefaultlib:"mfcs42.lib" /nodefaultlib:"msvcrt.lib" /out:"..\..\bin\OspMFCDemoAppd.exe" /pdbtype:sept /libpath:"lib" /libpath:"..\..\lib"
+# ADD LINK32 Psapi.Lib OspLib.lib CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\OspMFCDemoApp.pdb" /debug /machine:I386 /nodefaultlib:"mfc42.lib" /nodefaultlib:"mfcs42.lib" /nodefaultlib:"msvcrt.lib" /out:"..\..\bin\OspMFCDemoAppd.exe" /pdbtype:sept /libpath:"lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -96,6 +96,19 @@ LINK32=link.exe
 
 SOURCE=.\DemoInstance.cpp
 # SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=.\KillProcess.cpp
+
+!IF  "$(CFG)" == "OspMFCDemoApp - Win32 Release"
+
+# SUBTRACT CPP /YX /Yc /Yu
+
+!ELSEIF  "$(CFG)" == "OspMFCDemoApp - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -121,6 +134,10 @@ SOURCE=.\StdAfx.cpp
 # Begin Source File
 
 SOURCE=.\DemoInstance.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\KillProcess.h
 # End Source File
 # Begin Source File
 
