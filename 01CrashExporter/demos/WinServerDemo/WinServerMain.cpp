@@ -13,8 +13,8 @@ int main(int argc, char* argv[])
 	info.cb = sizeof(WINSERVER_INFO);
 	info.pszWinServerName = _T("TestWinServer");
 	info.pszLauchAppName =  _T("OspMFCDemoApp.exe");
-	info.pszLauchAppCmdLine = _T("/start");
-	info.pszLauchAppCmdLine = _T("/stop");
+	info.pszLauchAppCmdLine = _T(" /start");
+	info.pszStopAppCmdLine = _T(" /stop");
 
 	WinServer::Instance()->Init(&info);
 	DWORD dwCode = CODE_NONE;
