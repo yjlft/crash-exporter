@@ -136,7 +136,7 @@ CMainWindowIterator::~CMainWindowIterator()
 //
 BOOL CMainWindowIterator::OnWindow(HWND hwnd)
 {
-	if (!m_bVisible || (GetWindowLong(hwnd,GWL_STYLE) & WS_VISIBLE)) 
+	if (!m_bVisible || (GetWindowLong(hwnd, GWL_STYLE)&WS_VISIBLE)) 
 	{
 		DWORD pidwin;
 		GetWindowThreadProcessId(hwnd, &pidwin);

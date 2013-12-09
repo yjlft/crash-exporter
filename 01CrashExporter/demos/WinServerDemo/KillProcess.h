@@ -8,19 +8,21 @@
 class CProcessIterator 
 {
 protected:
-	DWORD*	m_pids;			// array of procssor IDs
-	DWORD		m_count;			// size of array
-	DWORD		m_current;		// next array item
+	DWORD*		m_pids;						// array of procssor IDs
+	DWORD		m_count;					// size of array
+	DWORD		m_current;					// next array item
 	
 public:
 	CProcessIterator();
 	~CProcessIterator();
 	
 	DWORD First();
-	DWORD Next() {
+	DWORD Next() 
+	{
 		return m_pids && m_current < m_count ? m_pids[m_current++] : 0;
 	}
-	DWORD GetCount() {
+	DWORD GetCount() 
+	{
 		return m_count;
 	}
 };
@@ -32,10 +34,10 @@ public:
 class CProcessModuleIterator 
 {
 protected:
-	HANDLE	m_hProcess;				// process handle
-	HMODULE*	m_hModules;				// array of module handles
+	HANDLE		m_hProcess;					// process handle
+	HMODULE*	m_hModules;					// array of module handles
 	DWORD		m_count;					// size of array
-	DWORD		m_current;				// next module handle
+	DWORD		m_current;					// next module handle
 	
 public:
 	CProcessModuleIterator(DWORD pid);
@@ -64,9 +66,9 @@ class CWindowIterator
 {
 protected:
 	HWND*	m_hwnds;				// array of hwnds for this PID
-	DWORD m_nAlloc;			// size of array
-	DWORD m_count;				// number of HWNDs found
-	DWORD m_current;			// current HWND
+	DWORD	m_nAlloc;				// size of array
+	DWORD	m_count;				// number of HWNDs found
+	DWORD	m_current;				// current HWND
 	static BOOL CALLBACK EnumProc(HWND hwnd, LPARAM lp);
 	
 	// virtual enumerator
@@ -104,8 +106,8 @@ public:
 class CMainWindowIterator : public CWindowIterator  
 {
 protected:
-	DWORD m_pid;				// process id
-	DWORD m_bVisible;			// show only visible windows
+	DWORD m_pid;									// process id
+	DWORD m_bVisible;								// show only visible windows
 	virtual BOOL OnWindow(HWND hwnd);
 public:
 	CMainWindowIterator(DWORD pid, BOOL bVis=TRUE, DWORD nAlloc=1024);
