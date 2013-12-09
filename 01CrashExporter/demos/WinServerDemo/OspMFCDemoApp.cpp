@@ -49,7 +49,7 @@ void COspMFCDemoAppApp::OnStart()
 		::MessageBox(NULL, _T("程序已经在运行"), _T("提示"), MB_OK);
 		return;
 	}
-
+	InitCrashExporter();
 	COspMFCDemoAppDlg dlg;
 	m_pMainWnd = &dlg;
 	int nResponse = dlg.DoModal();
@@ -111,9 +111,8 @@ CFindKillProcess* COspMFCDemoAppApp::GetFindKillProcessInstance()
 
 BOOL COspMFCDemoAppApp::InitInstance()
 {
-
 	// Standard initialization
-	InitCrashExporter();
+
 	LPWSTR *szArglist;
 	int nArgs;
 	szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
