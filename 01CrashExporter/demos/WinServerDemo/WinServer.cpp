@@ -8,7 +8,6 @@
 #include <crtdbg.h>
 #include <TLHELP32.H>
 #include "WinServer.h"
-#include "KillProcess.h"
 
 
 WinServer* WinServer::m_pWinServer = NULL;
@@ -24,17 +23,10 @@ WinServer* WinServer::Instance()
 //
 WinServer::WinServer()	 
 {	
-	m_pszLauchAppName = NULL;
-	m_pFindKillProcess = NULL;
 }
 
 WinServer::~WinServer()
 {
-	if (m_pFindKillProcess != NULL)
-	{
-		delete m_pFindKillProcess;
-		m_pFindKillProcess = NULL;
-	}
 }
 //
 LPTSTR WinServer::GetLastErrorText(LPTSTR pszBuf, DWORD dwSize) 
@@ -79,6 +71,7 @@ int WinServer::Init(WINSERVER_INFO* pInfo)
 	m_pszWinServerName = pInfo->pszWinServerName;
 	m_pszLauchAppName = pInfo->pszLauchAppName;
 	m_pszLauchAppCmdLine = pInfo->pszLauchAppCmdLine;
+	m_pszStopAppCmdLine = pInfo->pszStopAppCmdLine;
 	m_bLauchApp = (pInfo->dwFlags&NOT_LAUCH_APP) == 0;
 	m_bkillAppBeforeLauch = (pInfo->dwFlags&NOT_KILL_PRELAUCHED_APP) == 0;
 	m_bKillAppAfterStopService = (pInfo->dwFlags&NOT_KILL_LAUCHED_APP) == 0;
@@ -257,15 +250,8 @@ void WinServer::UninstanceServer()
 			_tprintf(_T("\n%s stop failed.\n"), m_pszWinServerName);
 	}
 	if (m_bKillAppAfterStopService)
-	{
-		int bRet = KillLauchedApp();	
-		if (0 == bRet)
-			_tprintf(_T("\nKill Lauched App process success.\n"));
-		else if (1 == bRet)
-			_tprintf(_T("\nFind Lauched App failed.\n"));
-		else if (2 == bRet)
-			_tprintf(_T("\nKill Lauched App process failed.\n"));
-	}	
+		LaunchApp(m_pszLauchAppName, m_pszStopAppCmdLine);
+	
 	// now remove the service
 	if( DeleteService(schService) ) 
 		_tprintf(_T("Remove %s success.\n"), m_pszWinServerName); 
@@ -308,11 +294,14 @@ void WinServer::RunService()
 	}
 	
 	if (m_bkillAppBeforeLauch)
-		KillLauchedApp();
+	{
+		LaunchApp(m_pszLauchAppName, m_pszStopAppCmdLine);
+		::Sleep(1000);
+	}
 	
 	if (m_bLauchApp)
 	{
-		if (LaunchApp(m_pszLauchAppName, (LPTSTR)m_pszLauchAppCmdLine))
+		if (LaunchApp(m_pszLauchAppName, m_pszLauchAppCmdLine))
 			_tprintf(_T("\nRun new App process success.\n"));
 		else
 			_tprintf(_T("\nRun new App process failed.\n"));
@@ -348,15 +337,7 @@ void WinServer::StopService()
 		goto cleanup;
 	
 	if (m_bKillAppAfterStopService)
-	{
-		int bRet = KillLauchedApp();	
-		if (0 == bRet)
-			_tprintf(_T("\nKill Lauched App process success.\n"));
-		else if (1 == bRet)
-			_tprintf(_T("\nFind Lauched App failed.\n"));
-		else if (2 == bRet)
-			_tprintf(_T("\nKill Lauched App process failed.\n"));
-	}
+		LaunchApp(m_pszLauchAppName, m_pszStopAppCmdLine);
 	
 cleanup:
 	if (schService != NULL)
@@ -382,7 +363,7 @@ BOOL WinServer::ReportStatus(DWORD dwCurrentState, DWORD dwWaitHint,DWORD dwErrE
 }
 
 // Launches App process
-BOOL WinServer::LaunchApp(LPCTSTR pszAppName, LPTSTR pszCmdLineParams)
+BOOL WinServer::LaunchApp(LPCTSTR pszAppName, LPCTSTR pszCmdLineParams)
 {
     /* Create App process */
 	
@@ -394,7 +375,7 @@ BOOL WinServer::LaunchApp(LPCTSTR pszAppName, LPTSTR pszCmdLineParams)
     memset(&pi, 0, sizeof(PROCESS_INFORMATION));    
 	
     BOOL bCreateProcess = CreateProcess(
-        pszAppName, pszCmdLineParams, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+        pszAppName, (LPTSTR)pszCmdLineParams, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
     if(pi.hThread)
     {
         CloseHandle(pi.hThread);
@@ -409,26 +390,6 @@ BOOL WinServer::LaunchApp(LPCTSTR pszAppName, LPTSTR pszCmdLineParams)
     CloseHandle( pi.hProcess );
     pi.hProcess = NULL;	
 	return TRUE;
-}
-
-int WinServer::KillLauchedApp()
-{
-	DWORD pid = GetFindKillProcessInstance()->FindProcess(m_pszLauchAppName);
-	if (pid == 0)
-		return 1;
-	
-	if (!GetFindKillProcessInstance()->KillProcess(pid, TRUE))
-		return 2;
-	return 0;
-}
-
-CFindKillProcess* WinServer::GetFindKillProcessInstance()
-{
-	if (m_pFindKillProcess == NULL)
-	{
-		m_pFindKillProcess = new CFindKillProcess();
-	}
-	return m_pFindKillProcess;
 }
 
 

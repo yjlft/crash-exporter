@@ -29,6 +29,7 @@ typedef struct tagWINSERVER_INFO
 	LPCTSTR pszWinServerName;			// Name of winserver application.
 	LPCTSTR pszLauchAppName;			// Name of Lauch application.
 	LPCTSTR pszLauchAppCmdLine;			// CmdLine of Lauch application.
+	LPCTSTR pszStopAppCmdLine;			// CmdLine of Stop application.
 	DWORD	dwFlags;					// Flags.
 
 
@@ -72,17 +73,13 @@ private:
 
 	void					StopService();
 	LPTSTR					GetLastErrorText(LPTSTR pszBuf, DWORD dwSize) ;
-	BOOL					LaunchApp(LPCTSTR pszAppName, LPTSTR pszCmdLineParams);
-	int						KillLauchedApp();
-	//BOOL					KillProcess(LPCTSTR pszExeName);
-	CFindKillProcess*		GetFindKillProcessInstance(); 
-
-	CFindKillProcess*		m_pFindKillProcess;
+	BOOL					LaunchApp(LPCTSTR pszAppName, LPCTSTR pszCmdLineParams);
 
 	static WinServer*		m_pWinServer;
 	LPCTSTR					m_pszLauchAppName;
 	LPCTSTR					m_pszWinServerName;
 	LPCTSTR					m_pszLauchAppCmdLine;
+	LPCTSTR					m_pszStopAppCmdLine;
 	BOOL					m_bLauchApp;
 	BOOL					m_bkillAppBeforeLauch;
 	BOOL					m_bKillAppAfterStopService;
