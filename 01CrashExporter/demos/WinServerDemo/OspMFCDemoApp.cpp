@@ -17,6 +17,9 @@ static char THIS_FILE[] = __FILE__;
 
 #define POCESS_NAME  _T("OspMFCDemoApp")
 
+ 
+//#define POCESS_NAME  "OspMFCDemoApp"
+
 /////////////////////////////////////////////////////////////////////////////
 // COspMFCDemoAppApp
 
@@ -40,6 +43,37 @@ COspMFCDemoAppApp theApp;
 
 /////////////////////////////////////////////////////////////////////////////
 // COspMFCDemoAppApp initialization
+
+
+void InitCrashExporter()
+{
+	CR_INSTALL_INFO info;
+	info.dwFlags |= CR_INST_APP_RESTART;
+	info.pszRestartCmdLine = _T("/restart");
+	
+	// Install crash handlers
+	int nInstResult = crInstall(&info);            
+	assert(nInstResult==0);
+	
+	
+	nInstResult = crAddScreenshot(CR_AS_MAIN_WINDOW);
+	assert(nInstResult==0);
+	
+	// Check result
+	if(nInstResult!=0)
+	{
+		TCHAR szbuff[256];
+		crGetLastErrorMsg(szbuff, 256); // Get last error
+		_tprintf(_T("%s\n"), szbuff); // and output it to the screen
+		return;
+	}
+}
+
+void UnInitCrashExporter()
+{
+	// Uninstall crash reporting
+	crUninstall();
+}
 
 void COspMFCDemoAppApp::OnStart()
 {
@@ -73,31 +107,7 @@ void COspMFCDemoAppApp::OnReStart()
 	OnStart();
 }
 
-void InitCrashExporter()
-{
-	CR_INSTALL_INFO info;
-	// Install crash handlers
-	int nInstResult = crInstall(&info);            
-	assert(nInstResult==0);
-	
-	nInstResult = crAddScreenshot(CR_AS_MAIN_WINDOW);
-	assert(nInstResult==0);
-	
-	// Check result
-	if(nInstResult!=0)
-	{
-		TCHAR szbuff[256];
-		crGetLastErrorMsg(szbuff, 256); // Get last error
-		_tprintf(_T("%s\n"), szbuff); // and output it to the screen
-		return;
-	}
-}
 
-void UnInitCrashExporter()
-{
-	// Uninstall crash reporting
-	crUninstall();
-}
 
 CFindKillProcess* COspMFCDemoAppApp::GetFindKillProcessInstance()
 {

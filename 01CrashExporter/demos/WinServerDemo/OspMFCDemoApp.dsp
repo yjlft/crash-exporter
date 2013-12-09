@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 Psapi.Lib OspLib.lib CrashRpt1402.lib /nologo /subsystem:windows /pdb:"..\..\bin\OspMFCDemoApp.pdb" /debug /machine:I386 /out:"..\..\bin\OspMFCDemoApp.exe" /libpath:"lib" /libpath:"..\..\lib"
+# ADD LINK32 Psapi.Lib OspLib.lib CrashRpt1402.lib /nologo /subsystem:windows /incremental:yes /pdb:"..\..\bin\OspMFCDemoApp.pdb" /debug /machine:I386 /out:"..\..\bin\OspMFCDemoApp.exe" /libpath:"lib" /libpath:"..\..\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "OspMFCDemoApp - Win32 Debug"
@@ -106,6 +106,8 @@ SOURCE=.\KillProcess.cpp
 # SUBTRACT CPP /YX /Yc /Yu
 
 !ELSEIF  "$(CFG)" == "OspMFCDemoApp - Win32 Debug"
+
+# SUBTRACT CPP /YX /Yc /Yu
 
 !ENDIF 
 
