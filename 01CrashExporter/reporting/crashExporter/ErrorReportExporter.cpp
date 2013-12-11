@@ -62,36 +62,6 @@ BOOL CErrorReportExporter::Init(LPCTSTR szFileMappingName)
 	// Start crash info collection work assynchronously
 	DoWorkAssync(COLLECT_CRASH_INFO);
 
-	/*
-	if(!m_CrashInfo.m_bSendRecentReports)
-	{
-		// Start crash info collection work assynchronously
-		DoWorkAssync(COLLECT_CRASH_INFO);
-	}
-	else
-	{
-		// Check if another instance of crashExporter.exe is running.
-		::CreateMutex( NULL, FALSE,_T("Local\\43773530-129a-4298-88f2-20eea3e4a59b"));
-		if (::GetLastError() == ERROR_ALREADY_EXISTS)
-		{		
-			m_sErrorMsg = _T("Another crashExporter.exe already tries to resend recent reports.");
-			return FALSE;
-		}
-
-		if(m_CrashInfo.GetReportCount()==0)
-		{
-			m_sErrorMsg = _T("There are no reports for us to send.");
-			return FALSE; 
-		}
-
-		// Check if it is ok to remind user now.
-		if(!m_CrashInfo.IsRemindNowOK())
-		{
-			m_sErrorMsg = _T("Not enough time elapsed to remind user about recent crash reports.");
-			return FALSE;
-		}
-	}
-	*/
 	// Done.
 	m_sErrorMsg = _T("Success.");
 	return TRUE;
